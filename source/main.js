@@ -91,8 +91,8 @@ if (
       "CONF: The monitoring.pageId was not found in the environment.",
     );
 }
-if (!configs.openai.apiKey)
-  logger.warn("CONF: The openai.apiKey was not found in the environment.");
+if (!configs.gemini.apiKey)
+  logger.warn("CONF: The gemini.apiKey was not found in the environment.");
 if (!configs.open_weather_token)
   logger.warn("CONF: The open_weather_token was not found in the environment.");
 if (!configs.test_guild)

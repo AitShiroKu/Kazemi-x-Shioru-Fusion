@@ -97,37 +97,41 @@ module.exports = {
 
             message.reply(answerScript);
           } else {
-            // If the bot doesn't have any answer, it will use the AI.
-            const apiKey = message.client.configs.openai.apiKey;
-            const baseURL = message.client.configs.openai.baseURL;
+            // If the bot doesn't have any answer, it will use Gemini AI.
+            const { geminiResponse } = require("../utils/geminiUtils");
+            const { splitMessageWithCodeBlocks } = require("../utils/codeBlockUtils");
+            const { AttachmentBuilder } = require("discord.js");
+
+            const geminiConfigs = message.client.configs.gemini;
             const clientUsername = message.client.user.username;
             const systemConstants = message.client.configs.constants.system;
+            const systemPrompt =
+              systemConstants ?? `From now on, you are ${clientUsername}.`;
 
-            const response = await fetch(
-              new URL("/v1/chat/completions", baseURL),
-              {
-                method: "POST",
-                headers: {
-                  Authorization: `Bearer ${apiKey}`,
-                  "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                  model: "gpt-4o-mini",
-                  messages: [
-                    {
-                      role: "system",
-                      content:
-                        systemConstants ??
-                        `From now on, you are ${clientUsername}.`,
-                    },
-                    { role: "user", content: argument },
-                  ],
-                }),
-              },
+            // Get Gemini response
+            const response = await geminiResponse(
+              argument,
+              systemPrompt,
+              geminiConfigs,
             );
-            const data = await response.json();
 
-            message.reply(data.choices[0].message.content);
+            // Split message and handle code blocks
+            const messageSegments = splitMessageWithCodeBlocks(response);
+
+            // Send each segment (with attachments if needed)
+            for (const segment of messageSegments) {
+              const replyOptions = { content: segment.text };
+
+              if (segment.attachment) {
+                const attachment = new AttachmentBuilder(
+                  Buffer.from(segment.attachment.content, "utf-8"),
+                  { name: segment.attachment.name },
+                );
+                replyOptions.files = [attachment];
+              }
+
+              await message.reply(replyOptions);
+            }
           }
         } catch (error) {
           message.reply(

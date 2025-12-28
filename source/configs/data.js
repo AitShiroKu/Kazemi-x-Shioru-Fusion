@@ -53,12 +53,12 @@ module.exports = {
   // Support notification alert
   notification: notification,
 
-  // Setup OpenAI
-  openai: {
-    apiKey: process.env.OPENAI_API_KEY ?? "",
-    baseURL: process.env.OPENAI_BASE_URL ?? "https://api.openai.com",
-    organization: process.env.OPENAI_ORGANIZATION ?? "",
-    project: process.env.OPENAI_PROJECT ?? "",
+  // Setup Google Gemini AI
+  gemini: {
+    apiKey: process.env.GEMINI_API_KEY ?? "",
+    model: process.env.GEMINI_MODEL ?? "gemini-2.0-flash-exp",
+    temperature: parseFloat(process.env.GEMINI_TEMPERATURE ?? "0.7"),
+    maxOutputTokens: parseInt(process.env.GEMINI_MAX_OUTPUT_TOKENS ?? "8192"),
   },
 
   // Setup Open Weather
