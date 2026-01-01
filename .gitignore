@@ -1,6 +1,7 @@
 # Dependency directories
 node_modules/
 dist/
+
 # Logs
 logs/
 *.log
@@ -17,3 +18,6 @@ logs/
 .firebaserc
 firebase.json
 database.rules.json
+
+# Data
+data/

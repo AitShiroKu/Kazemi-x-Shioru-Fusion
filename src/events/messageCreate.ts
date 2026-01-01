@@ -6,7 +6,10 @@ import {
   ButtonStyle,
   EmbedBuilder,
   Events,
+  AttachmentBuilder,
 } from 'discord.js';
+import { geminiResponse } from '../utils/gemini.js';
+import { splitMessageWithCodeBlocks, formatBotReply } from '../utils/utils.js';
 
 export const name = Events.MessageCreate;
 export const once = false;
@@ -57,8 +60,8 @@ export async function execute(client: any, message: Message) {
       return;
     }
 
-    const response = await client.geminiResponse(prompt, userId, username, client.userConversations, client.saveMemory);
-    const messageSegments = client.splitMessageWithCodeBlocks?.(response) || [{ text: response }];
+    const response = await geminiResponse(prompt, userId, username, client.userConversations, client.saveMemory);
+    const messageSegments = splitMessageWithCodeBlocks(response);
 
     for (let i = 0; i < messageSegments.length; i++) {
       const segment = messageSegments[i];
@@ -78,7 +81,6 @@ export async function execute(client: any, message: Message) {
       };
 
       if (segment.attachment) {
-        const AttachmentBuilder = client.AttachmentBuilder;
         const attachment = new AttachmentBuilder(
           Buffer.from(segment.attachment.content, 'utf-8'),
           { name: segment.attachment.name },
@@ -86,7 +88,11 @@ export async function execute(client: any, message: Message) {
         replyOptions.files = [attachment];
       }
 
-      await message.reply(replyOptions);
+      if (i === 0 && !segment.noReply) {
+        await message.reply(replyOptions);
+      } else {
+        await (message.channel as any).send(replyOptions);
+      }
     }
     return;
   }
@@ -100,8 +106,8 @@ export async function execute(client: any, message: Message) {
 
       if (!repliedMessage || repliedMessage.author.id !== client.user.id) return;
 
-      const response = await client.geminiResponse(message.content, userId, username, client.userConversations, client.saveMemory);
-      const messageSegments = client.splitMessageWithCodeBlocks?.(response) || [{ text: response }];
+      const response = await geminiResponse(message.content, userId, username, client.userConversations, client.saveMemory);
+      const messageSegments = splitMessageWithCodeBlocks(response);
 
       for (let i = 0; i < messageSegments.length; i++) {
         const segment = messageSegments[i];
@@ -121,7 +127,6 @@ export async function execute(client: any, message: Message) {
         };
 
         if (segment.attachment) {
-          const AttachmentBuilder = client.AttachmentBuilder;
           const attachment = new AttachmentBuilder(
             Buffer.from(segment.attachment.content, 'utf-8'),
             { name: segment.attachment.name },
@@ -129,7 +134,11 @@ export async function execute(client: any, message: Message) {
           replyOptions.files = [attachment];
         }
 
-        await message.reply(replyOptions);
+        if (i === 0 && !segment.noReply) {
+          await message.reply(replyOptions);
+        } else {
+          await (message.channel as any).send(replyOptions);
+        }
       }
     } catch (error) {
       client.logger.error('Error in message handling:', error);

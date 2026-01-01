@@ -8,6 +8,7 @@ import {
     EmbedBuilder,
 } from 'discord.js';
 import type { Command } from '../../types/index.js';
+import { geminiResponse } from '../../utils/gemini.js';
 
 export const data = new SlashCommandBuilder()
     .setName('ask')
@@ -38,7 +39,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const SUPPORT_URL = process.env.SUPPORT_URL;
 
     try {
-        const response = await client.geminiResponse(
+        const response = await geminiResponse(
             question,
             userId,
             username,

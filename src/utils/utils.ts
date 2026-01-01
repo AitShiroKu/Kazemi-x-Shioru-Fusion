@@ -66,6 +66,7 @@ export interface MessageSegment {
     name: string;
     content: string;
   };
+  noReply?: boolean;
 }
 
 /**
@@ -189,12 +190,10 @@ export function splitMessageWithCodeBlocks(text: string, maxLength: number = 180
     return splitMessage(cleanText, maxLength).map(text => ({ text }));
   }
 
-  // Split clean text at natural breakpoints, but ensure code blocks are kept with their context
+  // Split clean text at natural breakpoints
   const textParts = splitTextPreservingCodeBlocks(cleanText, codeBlocks, maxLength);
 
   for (const textPart of textParts) {
-    const segment: MessageSegment = { text: textPart };
-
     // Check if this text part contains a code block placeholder
     const codeBlockMatch = textPart.match(/\[CODE_BLOCK_(\d+)\]/);
     if (codeBlockMatch) {
@@ -205,20 +204,28 @@ export function splitMessageWithCodeBlocks(text: string, maxLength: number = 180
           ? `code-block_${codeBlock.index}${codeBlock.extension}`
           : `code-block_${codeBlock.index}.txt`;
 
-        segment.attachment = {
-          name: fileName,
-          content: codeBlock.code,
-        };
+        // 1. Add text segment with notification (this will be the reply if it's the first segment)
+        segments.push({
+          text: textPart.replace(
+            /\[CODE_BLOCK_\d+\]/,
+            `\n\n📎 **Code attached as ${fileName}**`
+          )
+        });
 
-        // Replace placeholder with description
-        segment.text = segment.text.replace(
-          /\[CODE_BLOCK_\d+\]/,
-          `\n\n📎 **Code attached as ${fileName}**`
-        );
+        // 2. Add the code attachment as a separate message (no reply)
+        segments.push({
+          text: `📁 **File: ${fileName}**`,
+          attachment: {
+            name: fileName,
+            content: codeBlock.code,
+          },
+          noReply: true
+        });
+        continue;
       }
     }
 
-    segments.push(segment);
+    segments.push({ text: textPart });
   }
 
   return segments;
