@@ -7,6 +7,7 @@ import {
   EmbedBuilder,
   ChannelType,
   Colors,
+  InteractionResponseFlags,
 } from 'discord.js';
 
 function addEmbedOptions(subcommand: any, withChannel: boolean): any {
@@ -189,6 +190,12 @@ function buildEmbed(interaction: ChatInputCommandInteraction): EmbedBuilder {
   if (inputDescription) embed.setDescription(inputDescription);
   if (inputThumbnail) embed.setThumbnail(inputThumbnail);
   if (inputImage) embed.setImage(inputImage);
+  
+  // Discord requires at least one of: title, description, fields, image, or thumbnail
+  // If none of these are set, add a default description
+  if (!inputTitle && !inputDescription && !inputFirstFieldName && !inputSecondFieldName && !inputImage && !inputThumbnail) {
+    embed.setDescription('No content provided');
+  }
 
   if (inputAuthorName || inputAuthorURL || inputAuthorIconURL) {
     embed.setAuthor({
@@ -369,7 +376,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   if (subcommand !== 'suppress' && !hasAnyEmbedOption(interaction)) {
     await interaction.reply({
       content: i18n('commands.embed.no_option_provided'),
-      ephemeral: true,
+      flags: [InteractionResponseFlags.Ephemeral],
     });
     return;
   }
@@ -395,7 +402,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
               id: inputChannel.id,
             })
           : i18n('commands.embed.embedded_has_been_sent'),
-        ephemeral: true,
+        flags: [InteractionResponseFlags.Ephemeral],
       });
       return;
     }
@@ -407,7 +414,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       if (!message) {
         await interaction.reply({
           content: i18n('commands.embed.message_not_found'),
-          ephemeral: true,
+          flags: [InteractionResponseFlags.Ephemeral],
         });
         return;
       }
@@ -420,7 +427,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
       await interaction.reply({
         content: i18n('commands.embed.embedded_has_been_replied'),
-        ephemeral: true,
+        flags: [InteractionResponseFlags.Ephemeral],
       });
       return;
     }
@@ -432,7 +439,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       if (!message) {
         await interaction.reply({
           content: i18n('commands.embed.message_not_found'),
-          ephemeral: true,
+          flags: [InteractionResponseFlags.Ephemeral],
         });
         return;
       }
@@ -440,7 +447,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       if (!message.editable) {
         await interaction.reply({
           content: i18n('commands.embed.can_not_edit'),
-          ephemeral: true,
+          flags: [InteractionResponseFlags.Ephemeral],
         });
         return;
       }
@@ -453,7 +460,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
       await interaction.reply({
         content: i18n('commands.embed.embedded_has_been_edited'),
-        ephemeral: true,
+        flags: [InteractionResponseFlags.Ephemeral],
       });
       return;
     }
@@ -466,7 +473,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       if (!message) {
         await interaction.reply({
           content: i18n('commands.embed.message_not_found'),
-          ephemeral: true,
+          flags: [InteractionResponseFlags.Ephemeral],
         });
         return;
       }
@@ -474,7 +481,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       if (!message.embeds || message.embeds.length === 0) {
         await interaction.reply({
           content: i18n('commands.embed.is_not_embed'),
-          ephemeral: true,
+          flags: [InteractionResponseFlags.Ephemeral],
         });
         return;
       }
@@ -485,7 +492,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         content: inputSuppress
           ? i18n('commands.embed.suppresses')
           : i18n('commands.embed.unsuppresses'),
-        ephemeral: true,
+        flags: [InteractionResponseFlags.Ephemeral],
       });
       return;
     }
@@ -493,7 +500,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     client.logger?.error?.(error);
     await interaction.reply({
       content: i18n('commands.embed.can_not_edit'),
-      ephemeral: true,
+      flags: [InteractionResponseFlags.Ephemeral],
     });
   }
 }

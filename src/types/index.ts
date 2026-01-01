@@ -20,6 +20,13 @@ export interface BotClient extends Client {
   logger: pino.Logger;
   configs: BotConfig;
   temp: TempData;
+  userConversations: MemoryData;
+  saveMemory: (memory: MemoryData) => void;
+  formatBotReply?: (text: string) => string;
+  splitMessageWithCodeBlocks?: (text: string) => Array<{ text: string; attachment?: { content: string; name: string } }>;
+  // Database functions (stubs for removed Firebase integration)
+  initializeData?: (guild: any) => Promise<void>;
+  submitNotification?: (guild: any, eventName: string, embed: any) => Promise<void>;
 }
 
 export interface TempData {
@@ -102,7 +109,7 @@ export interface MemoryData {
 
 export interface UserMemory {
   username: string;
-  language: string;
+  language?: string;
   lastActivity: number;
   history: MemoryMessage[];
   createdAt: number;

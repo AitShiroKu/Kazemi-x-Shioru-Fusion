@@ -8,7 +8,6 @@ import {
   ApplicationIntegrationType,
   MessageContextMenuCommandInteraction,
 } from 'discord.js';
-import type { Context } from '../types/index.js';
 
 export const data = new ContextMenuCommandBuilder()
   .setType(ApplicationCommandType.Message)

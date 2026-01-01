@@ -45,7 +45,7 @@ export async function loadCommands(client: BotClient): Promise<void> {
             type: 'command',
             reason: 'You have a missing "data" or "data" is not an object.',
           },
-          `Unable to load command ${file} successfully.`,
+          `Unable to load command ${file}`,
         );
         continue;
       }
@@ -57,7 +57,7 @@ export async function loadCommands(client: BotClient): Promise<void> {
             type: 'command',
             reason: 'You have a missing "function" or "function" is not a string.',
           },
-          `Unable to load command ${file} successfully.`,
+          `Unable to load command ${file}`,
         );
         continue;
       }
@@ -71,7 +71,7 @@ export async function loadCommands(client: BotClient): Promise<void> {
             type: 'command',
             reason: `Found a command with a duplicate name as ${commandName}.`,
           },
-          `Unable to load command ${commandName} successfully.`,
+          `Unable to load command ${commandName}`,
         );
         continue;
       }

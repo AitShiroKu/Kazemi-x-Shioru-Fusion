@@ -28,6 +28,8 @@ import { setupProcessHandlers } from '../handlers/process.js';
 import config from '../services/config/config.js';
 import logger from '../services/logger/logger.js';
 import { initI18n, t } from '../services/i18n/i18n.js';
+import { loadMemory, saveMemory } from '../utils/memory.js';
+import { formatBotReply, splitMessageWithCodeBlocks } from '../utils/utils.js';
 
 /**
  * Create and configure Discord client
@@ -107,6 +109,29 @@ export function createClient(): BotClient {
     contexts: new Collection(),
   };
   client.player = player;
+  
+  // Initialize memory system for AI conversations
+  client.userConversations = loadMemory();
+  client.saveMemory = saveMemory;
+  
+  // Attach utility functions for message formatting
+  client.formatBotReply = formatBotReply;
+  client.splitMessageWithCodeBlocks = splitMessageWithCodeBlocks;
+  
+  // Attach stub functions for removed database integration
+  // These functions were used for Firebase-based guild data and notifications
+  // but the database integration has been removed from the project
+  client.initializeData = async (guild: any) => {
+    // Stub: Database integration removed
+    // This function previously initialized guild data in Firebase
+    client.logger.debug(`initializeData called for guild ${guild?.id} (database integration removed)`);
+  };
+  
+  client.submitNotification = async (guild: any, eventName: string, embed: any) => {
+    // Stub: Database integration removed
+    // This function previously sent notifications to configured channels
+    client.logger.debug(`submitNotification called for event ${eventName} in guild ${guild?.id} (database integration removed)`);
+  };
 
   return client;
 }

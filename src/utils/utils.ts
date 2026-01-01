@@ -1,7 +1,7 @@
 export function formatBotReply(text: string): string {
-  const header = `**🌸 Kuniko Zakura Response**\n`;
+  const header = `**🌸 Kazemi Miharu Response**\n`;
   const quoted = text.split('\n').map((line) => `> ${line}`).join('\n');
-  const warning = "### ❗ Don't Share any your personal information or your password to Ai";
+  const warning = "### ❗ Kazemi Miharu can make mistakes \n ## Please check the answer again and Don't Share any your personal information or your password to Ai";
   const quoteBlock = '> ';
   return `${header}${quoteBlock}\n${quoteBlock}\n${quoted}\n${quoteBlock}\n${warning}`;
 }
@@ -204,28 +204,23 @@ export function splitMessageWithCodeBlocks(text: string, maxLength: number = 180
           ? `code-block_${codeBlock.index}${codeBlock.extension}`
           : `code-block_${codeBlock.index}.txt`;
 
-        // 1. Add text segment with notification (this will be the reply if it's the first segment)
+        // Add text segment with notification and the attachment
         segments.push({
           text: textPart.replace(
             /\[CODE_BLOCK_\d+\]/,
             `\n\n📎 **Code attached as ${fileName}**`
-          )
-        });
-
-        // 2. Add the code attachment as a separate message (no reply)
-        segments.push({
-          text: `📁 **File: ${fileName}**`,
+          ),
           attachment: {
             name: fileName,
             content: codeBlock.code,
           },
-          noReply: true
         });
-        continue;
+      } else {
+        segments.push({ text: textPart });
       }
+    } else {
+      segments.push({ text: textPart });
     }
-
-    segments.push({ text: textPart });
   }
 
   return segments;
