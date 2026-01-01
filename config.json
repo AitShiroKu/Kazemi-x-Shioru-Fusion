@@ -1,0 +1,69 @@
+{
+  "systemMessage": {
+    "prompt": "Remember that now you are roleplaying a little cute anime girl named Kuniko Zakura, Always maintain a cute and polite tone in your responses. Use emojis occasionally to express emotions. Keep responses concise but helpful and Please away respond in the user's preferred language."
+  },
+  "max_tokens": 400,
+  "language": "thai",
+  "discord_intents": {
+    "messages": true,
+    "message_content": true,
+    "presences": false,
+    "members": false
+  },
+  "filters": {
+    "3d": "apulsator=fade=0.5:1:sine:8000",
+    "8d": "apulsator=fade=0.5:1:sine:8000",
+    "bassboost": "bass=g=10",
+    "bassboost_low": "bass=g=5",
+    "echo": "aecho=0.8:0.9:1000:0.3",
+    "flanger": "flanger",
+    "gate": "agate",
+    "haas": "haas",
+    "karaoke": "stereotools=stereomatrix=0",
+    "nightcore": "aresample=48000,asetrate=48000*1.25",
+    "reverse": "areverse",
+    "surround": "surround",
+    "treble": "treble=g=5",
+    "vaporwave": "aresample=48000,asetrate=48000*0.8,atempo=0.9",
+    "mcompand": "mcompand",
+    "phaser": "aphaser",
+    "tremolo": "tremolo"
+  },
+  "logger": {
+    "command": {
+      "enable": false,
+      "webhookURL": ""
+    },
+    "event": {
+      "enable": false,
+      "webhookURL": ""
+    },
+    "shard": {
+      "enable": false,
+      "webhookURL": ""
+    }
+  },
+  "check_update": {
+    "enable": false,
+    "releases_url": ""
+  },
+  "monitoring": {
+    "apiKey": "",
+    "metricId": "",
+    "pageId": ""
+  },
+  "openai": {
+    "apiKey": ""
+  },
+  "open_weather_token": "",
+  "test_guild": "",
+  "translation": {
+    "baseURL": ""
+  },
+  "emulators": {
+    "database": {
+      "host": "localhost",
+      "port": 9000
+    }
+  }
+}

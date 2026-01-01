@@ -1,8 +1,0 @@
-project_id: '590379'
-files:
-  - source: /source/locales/th/translation.json
-    ignore:
-      - /source/locales/*.md
-    translation: /source/locales/%osx_locale%/translation.json
-  - source: /documents/README.th.md
-    translation: /documents/README.%osx_locale%.md
