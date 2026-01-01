@@ -53,7 +53,8 @@
  * SOFTWARE.
  */
 
-import { startBot } from './utils/discord.js';
+import { startBot, createClient } from './utils/client.js';
 
-startBot();
+const client = createClient();
+startBot(client);
 

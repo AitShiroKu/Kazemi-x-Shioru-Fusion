@@ -18,7 +18,8 @@ import { SpotifyPlugin } from '@distube/spotify';
 import { SoundCloudPlugin } from '@distube/soundcloud';
 import { YtDlpPlugin } from '@distube/yt-dlp';
 
-import type { BotClient, BotConfig } from '../types/index.js';
+import { BotClient } from '../types/index.js';
+export type { BotClient };
 import { loadCommands, registerCommands } from '../handlers/command.js';
 import { loadEvents } from '../handlers/event.js';
 import { loadContexts } from '../handlers/context.js';
@@ -48,8 +49,8 @@ export function createClient(): BotClient {
       afk: true,
       activities: [
         {
-          name: '🌸 Kazemi Miharu',
-          type: ActivityType.Custom,
+          name: '/help | Beta 1.0',
+          type: ActivityType.Listening,
         },
       ],
     },
@@ -109,7 +110,6 @@ export function createClient(): BotClient {
 
   return client;
 }
-
 
 /**
  * Load all handlers
