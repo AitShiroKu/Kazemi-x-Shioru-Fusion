@@ -91,72 +91,11 @@ export const permissions = [PermissionFlagsBits.SendMessages];
 export const category = 'settings';
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-  const client = interaction.client as any;
-  const subcommand = interaction.options.getSubcommand();
-  const inputLocale = interaction.options.getString('locale');
-  const inputType = interaction.options.getString('type');
+  const unavailableEmbed = new EmbedBuilder()
+    .setTitle('⚠️ Feature Unavailable')
+    .setDescription('The language setting system is currently unavailable as the database integration has been removed.')
+    .setColor(Colors.Yellow)
+    .setTimestamp();
 
-  const i18n = client.i18n;
-  const db = client.database;
-  const guildRef = db.ref(`guilds/${interaction.guildId}/language`);
-  const guildSnapshot = await guildRef.get();
-  const guildVal = guildSnapshot.val() || { type: 'CUSTOM', locale: 'en-US' };
-
-  const locales = i18n.options.preload || ['en-US', 'th'];
-
-  switch (subcommand) {
-    case 'get':
-      const getEmbed = new EmbedBuilder()
-        .setTitle('Language Settings')
-        .setDescription([
-          `</${interaction.commandId}: ${interaction.commandName}>`,
-          `Current language: ${guildVal.locale}`,
-          `Type: ${guildVal.type}`,
-        ].join('\n\n'))
-        .setColor(Colors.Blue)
-        .setTimestamp();
-
-      await interaction.reply({ embeds: [getEmbed] });
-      break;
-    case 'list':
-      const listEmbed = new EmbedBuilder()
-        .setTitle('Supported Languages')
-        .setDescription(`Available languages:\n${locales.join(', ')}`)
-        .setColor(Colors.Blue)
-        .setTimestamp()
-        .setFooter({
-          text: 'Use /language set to change language',
-        });
-
-      await interaction.reply({ embeds: [listEmbed] });
-      break;
-    case 'set':
-      if (!locales.includes(inputLocale))
-        return await interaction.reply(
-          `Language '${inputLocale}' not found. Available: ${locales.join(', ')}`,
-        );
-
-      if (inputLocale === i18n.language)
-        return await interaction.reply(
-          `Language '${inputLocale}' is already set.`,
-        );
-
-      await guildRef.set({ ...guildVal, locale: inputLocale });
-      await i18n.changeLanguage(inputLocale);
-
-      await interaction.reply(`Changed language to: ${inputLocale}`);
-      break;
-    case 'by':
-      await guildRef.set({ ...guildVal, type: inputType });
-
-      let targetLocale: string = guildVal.locale;
-      if (inputType === 'USER') targetLocale = interaction.locale;
-
-      await i18n.changeLanguage(targetLocale);
-
-      await interaction.reply(
-        `Changed language type to: ${inputType} (using: ${targetLocale})`,
-      );
-      break;
-  }
+  await interaction.reply({ embeds: [unavailableEmbed], ephemeral: true });
 }

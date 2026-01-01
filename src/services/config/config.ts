@@ -82,8 +82,5 @@ if (!config.gemini.apiKey) {
   console.warn('⚠️  WARNING: GEMINI_API_KEY is not set. AI features will not work.');
 }
 
-if (!config.firebase.apiKey) {
-  console.warn('⚠️  WARNING: Firebase configuration is incomplete. Database features may not work.');
-}
 
 console.log('✅ Configuration loaded successfully');

@@ -15,7 +15,6 @@ export interface BotClient extends Client {
   contexts: Collection<string, Context>;
   cooldowns: Collection<string, Collection<string, number>>;
   player: any;
-  database?: any;
   i18n: any;
   mode?: string;
   logger: pino.Logger;
@@ -56,12 +55,12 @@ export interface ContextInfo {
 // ============================================================================
 
 export interface Command {
-   data: SlashCommandBuilder;
-   execute: (interaction: ChatInputCommandInteraction) => Promise<void> | void;
-   permissions?: PermissionResolvable[];
-   cooldown?: number;
-   category?: CommandCategory;
-   usage?: string;
+  data: SlashCommandBuilder;
+  execute: (interaction: ChatInputCommandInteraction) => Promise<void> | void;
+  permissions?: PermissionResolvable[];
+  cooldown?: number;
+  category?: CommandCategory;
+  usage?: string;
 }
 
 export interface Context {

@@ -11,7 +11,6 @@ import { loadMemory, saveMemory, type MemoryData } from './memory.js';
 import { geminiResponse } from './gemini.js';
 import { splitMessageWithCodeBlocks, formatBotReply } from './utils.js';
 import { config } from '../services/config/config.js';
-import { initializeDatabase, getDatabaseRef } from '../services/database/firebase.js';
 import { initI18n } from '../services/i18n/i18n.js';
 import { initializeMusicPlayer } from '../services/music/distube.js';
 import { loadEvents } from '../handlers/event.js';
@@ -62,55 +61,10 @@ const webhookSend = async (url: string, message: any) => {
 };
 
 /**
- * Utility to submit notifications based on guild settings
+ * Empty functions to prevent crashes after database removal
  */
-const submitNotification = async (guild: any, eventName: string, embedData: EmbedBuilder) => {
-  try {
-    const guildRef = client.database.ref(`guilds/${guild.id}`);
-    const snapshot = await guildRef.get();
-    if (!snapshot.exists()) return;
-
-    const guildData = snapshot.val();
-    const notifyConfig = guildData.notify?.[eventName.toLowerCase()] || guildData.notify?.[eventName];
-
-    if (notifyConfig?.enable) {
-      // Use configured channel or default to system channel/first text channel
-      const channelId = notifyConfig.channelId || guild.systemChannelId;
-      const channel = guild.channels.cache.get(channelId);
-
-      if (channel && channel.isTextBased()) {
-        await channel.send({ embeds: [embedData] });
-      }
-    }
-  } catch (err) {
-    client.logger.error(err, `Failed to submit notification for ${eventName}`);
-  }
-};
-
-/**
- * Utility to initialize or update guild data
- */
-const initializeData = async (guild: any) => {
-  try {
-    const guildRef = client.database.ref(`guilds/${guild.id}`);
-    const snapshot = await guildRef.get();
-
-    if (!snapshot.exists()) {
-      await guildRef.set({
-        joinedAt: guild.joinedAt?.toISOString() || new Date().toISOString(),
-        name: guild.name,
-        memberCount: guild.memberCount,
-        notify: {
-          message: { enable: true },
-          join: { enable: true },
-          leave: { enable: true },
-        }
-      });
-    }
-  } catch (err) {
-    client.logger.error(err, `Failed to initialize data for guild ${guild.id}`);
-  }
-};
+const initializeData = async () => { };
+const submitNotification = async () => { };
 
 // Map Kazemi utilities to client for event handlers
 (client as any).geminiResponse = geminiResponse;
@@ -120,50 +74,30 @@ const initializeData = async (guild: any) => {
 (client as any).saveMemory = saveMemory;
 (client as any).AttachmentBuilder = AttachmentBuilder;
 (client as any).webhookSend = webhookSend;
-(client as any).submitNotification = submitNotification;
 (client as any).initializeData = initializeData;
+(client as any).submitNotification = submitNotification;
 
 export async function startBot() {
   try {
     // 1. Setup Process Handlers
     setupProcessHandlers(client);
 
-    // 2. Initialize Database
-    initializeDatabase(client.configs);
-    const { get, set, child } = await import('firebase/database');
-    client.database = {
-      ref: (path: string) => ({
-        get: () => get(child(getDatabaseRef(), path)),
-        set: (data: any) => set(child(getDatabaseRef(), path), data),
-        transaction: async (fn: any) => {
-          const nodeRef = child(getDatabaseRef(), path);
-          try {
-            const snapshot = await get(nodeRef);
-            const newValue = fn(snapshot.val());
-            if (newValue !== undefined) await set(nodeRef, newValue);
-          } catch (error) {
-            client.logger.error(error, `Transaction failed for ${path}`);
-          }
-        }
-      })
-    };
-
-    // 3. Initialize i18n
+    // 2. Initialize i18n
     client.i18n = await initI18n();
 
-    // 4. Initialize Music Player
+    // 3. Initialize Music Player
     client.player = initializeMusicPlayer(client, client.configs);
     setupPlayerEvents(client);
 
-    // 5. Load Handlers
+    // 4. Load Handlers
     loadEvents(client);
     await loadCommands(client);
     loadContexts(client);
 
-    // 6. Register Slash Commands
+    // 5. Register Slash Commands
     await registerCommands(client);
 
-    // 7. Login
+    // 6. Login
     await client.login(config.token);
   } catch (error) {
     client.logger.error(error, 'Failed to start bot');

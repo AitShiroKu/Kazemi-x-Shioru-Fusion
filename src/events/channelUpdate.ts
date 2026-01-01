@@ -43,7 +43,7 @@ export async function execute(client: any, oldChannel: any, newChannel: any) {
   await (client as any).initializeData(newChannel.guild);
 
   // Send webhook notification
-  if (client.configs.logger.channelUpdate.enable && client.configs.logger.channelUpdate.webhookURL) {
+  if (client.configs.logger.channelUpdate?.enable && client.configs.logger.channelUpdate?.webhookURL) {
     await (client as any).webhookSend(client.configs.logger.channelUpdate.webhookURL, {
       embeds: [channelUpdateEmbed],
     });

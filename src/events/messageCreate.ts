@@ -4,8 +4,9 @@ import {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
+  EmbedBuilder,
+  Events,
 } from 'discord.js';
-import { Events } from 'discord.js';
 
 export const name = Events.MessageCreate;
 export const once = false;
@@ -59,10 +60,21 @@ export async function execute(client: any, message: Message) {
     const response = await client.geminiResponse(prompt, userId, username, client.userConversations, client.saveMemory);
     const messageSegments = client.splitMessageWithCodeBlocks?.(response) || [{ text: response }];
 
-    for (const segment of messageSegments) {
+    for (let i = 0; i < messageSegments.length; i++) {
+      const segment = messageSegments[i];
+
+      const embed = new EmbedBuilder()
+        .setColor(0xE91E63) // Premium Pink
+        .setDescription(client.formatBotReply?.(segment.text) || segment.text)
+        .setTimestamp()
+        .setFooter({
+          text: `Conversation with ${username} | Gemini AI`,
+          iconURL: message.author.displayAvatarURL()
+        });
+
       const replyOptions: any = {
-        content: segment.text,
-        components: [supportButton],
+        embeds: [embed],
+        components: i === messageSegments.length - 1 ? [supportButton] : [],
       };
 
       if (segment.attachment) {
@@ -91,10 +103,21 @@ export async function execute(client: any, message: Message) {
       const response = await client.geminiResponse(message.content, userId, username, client.userConversations, client.saveMemory);
       const messageSegments = client.splitMessageWithCodeBlocks?.(response) || [{ text: response }];
 
-      for (const segment of messageSegments) {
+      for (let i = 0; i < messageSegments.length; i++) {
+        const segment = messageSegments[i];
+
+        const embed = new EmbedBuilder()
+          .setColor(0xE91E63) // Premium Pink
+          .setDescription(client.formatBotReply?.(segment.text) || segment.text)
+          .setTimestamp()
+          .setFooter({
+            text: `Conversation with ${username} | Gemini AI`,
+            iconURL: message.author.displayAvatarURL()
+          });
+
         const replyOptions: any = {
-          content: segment.text,
-          components: [supportButton],
+          embeds: [embed],
+          components: i === messageSegments.length - 1 ? [supportButton] : [],
         };
 
         if (segment.attachment) {
@@ -110,8 +133,13 @@ export async function execute(client: any, message: Message) {
       }
     } catch (error) {
       client.logger.error('Error in message handling:', error);
+
+      const errorEmbed = new EmbedBuilder()
+        .setColor(0xFF0000)
+        .setDescription('❌ ขออภัยค่ะ เกิดข้อผิดพลาดในการประมวลผล');
+
       await message.reply({
-        content: '❌ ขออภัยค่ะ เกิดข้อผิดพลาดในการประมวลผล',
+        embeds: [errorEmbed],
         components: [supportButton],
       });
     }

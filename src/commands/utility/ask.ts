@@ -5,6 +5,7 @@ import {
     ButtonBuilder,
     ButtonStyle,
     AttachmentBuilder,
+    EmbedBuilder,
 } from 'discord.js';
 import type { Command } from '../../types/index.js';
 
@@ -45,6 +46,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             client.saveMemory,
         );
 
+        // Limit the response if it's too long for an embed (max 4096 characters for description)
+        // splitMessageWithCodeBlocks already handles splitting, so we can use it.
         const messageSegments = client.splitMessageWithCodeBlocks?.(response) || [{ text: response }];
 
         const supportButton = new ActionRowBuilder<ButtonBuilder>().addComponents(
@@ -62,8 +65,22 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
         for (let i = 0; i < messageSegments.length; i++) {
             const segment = messageSegments[i];
+
+            const embed = new EmbedBuilder()
+                .setColor(0xE91E63) // Premium Pink
+                .setDescription(client.formatBotReply?.(segment.text) || segment.text)
+                .setTimestamp()
+                .setFooter({
+                    text: `Asked by ${username} | Gemini AI`,
+                    iconURL: interaction.user.displayAvatarURL()
+                });
+
+            if (i === 0) {
+                embed.setTitle(`💬 Question: ${question.length > 250 ? question.substring(0, 247) + '...' : question}`);
+            }
+
             const replyOptions: any = {
-                content: client.formatBotReply?.(segment.text) || segment.text,
+                embeds: [embed],
                 components: i === messageSegments.length - 1 ? [supportButton] : [],
             };
 
@@ -83,8 +100,13 @@ export async function execute(interaction: ChatInputCommandInteraction) {
         }
     } catch (error) {
         client.logger.error(error, 'Error in ask command');
+
+        const errorEmbed = new EmbedBuilder()
+            .setColor(0xFF0000)
+            .setDescription('❌ ขออภัยค่ะ เกิดข้อผิดพลาดในการประมวลผล');
+
         await interaction.editReply({
-            content: client.formatBotReply?.('❌ ขออภัยค่ะ เกิดข้อผิดพลาดในการประมวลผล') || '❌ ขออภัยค่ะ เกิดข้อผิดพลาดในการประมวลผล',
+            embeds: [errorEmbed],
         });
     }
 }

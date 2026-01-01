@@ -7,7 +7,6 @@ import {
   ApplicationIntegrationType,
   ChatInputCommandInteraction,
 } from 'discord.js';
-import type { Command } from '../../types/index.js';
 
 function containsURL(text: string): boolean {
   return /(https?:\/\/|www\.)\S+/i.test(text);

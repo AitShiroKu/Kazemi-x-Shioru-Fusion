@@ -14,7 +14,7 @@ export async function execute(client: any, error: Error) {
     .setDescription(`\`\`\`${error.message}\`\``)
     .setTimestamp();
 
-  if (client.configs.logger.error.enable && client.configs.logger.error.webhookURL) {
+  if (client.configs.logger.error?.enable && client.configs.logger.error?.webhookURL) {
     await (client as any).webhookSend(client.configs.logger.error.webhookURL, {
       embeds: [webhookLogEmbed],
     });

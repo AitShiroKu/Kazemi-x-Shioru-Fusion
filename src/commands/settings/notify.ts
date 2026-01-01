@@ -51,62 +51,11 @@ export const permissions = [PermissionFlagsBits.SendMessages];
 export const category = 'settings';
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-  const client = interaction.client as any;
-  const subcommand = interaction.options.getSubcommand();
+  const unavailableEmbed = new EmbedBuilder()
+    .setTitle('⚠️ Feature Unavailable')
+    .setDescription('The notification system is currently unavailable as the database integration has been removed.')
+    .setColor(Colors.Yellow)
+    .setTimestamp();
 
-  const db = client.database;
-  const notifyRef = db.ref(`guilds/${interaction.guildId}/notify`);
-  const notifySnapshot = await notifyRef.get();
-
-  const notifyData: Record<string, { enable: boolean }> =
-    (notifySnapshot.val() as Record<string, { enable: boolean }> | null) || {
-    message: { enable: true },
-    join: { enable: true },
-    leave: { enable: true },
-    ban: { enable: true },
-    kick: { enable: true },
-    member: { enable: true },
-    role: { enable: true },
-  };
-
-  switch (subcommand) {
-    case 'list':
-      const listEmbed = new EmbedBuilder()
-        .setTitle('Notification Settings')
-        .setDescription('Available notification types: message, join, leave, ban, kick, member, role')
-        .setColor(Colors.Blue)
-        .setTimestamp();
-
-      const enabledList = Object.entries(notifyData)
-        .filter(([, value]) => value.enable)
-        .map(([key, value]) => `• ${key}: ${value.enable ? 'enabled' : 'disabled'}`)
-        .join('\n');
-
-      listEmbed.setDescription(enabledList || 'No notifications configured.');
-
-      await interaction.reply({ embeds: [listEmbed] });
-      break;
-    case 'enable': {
-      const typeKey = interaction.options.getString('type') || 'message';
-      if (!notifyData[typeKey])
-        return await interaction.reply(`Notification type '${typeKey}' not found.`);
-
-      notifyData[typeKey].enable = true;
-      await notifyRef.set(notifyData);
-
-      await interaction.reply(`Enabled ${typeKey} notifications.`);
-      break;
-    }
-    case 'disable': {
-      const typeKey = interaction.options.getString('type') || 'message';
-      if (!notifyData[typeKey])
-        return await interaction.reply(`Notification type '${typeKey}' not found.`);
-
-      notifyData[typeKey].enable = false;
-      await notifyRef.set(notifyData);
-
-      await interaction.reply(`Disabled ${typeKey} notifications.`);
-      break;
-    }
-  }
+  await interaction.reply({ embeds: [unavailableEmbed], ephemeral: true });
 }

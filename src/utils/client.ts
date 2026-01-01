@@ -11,8 +11,6 @@ import {
   ActivityType,
   Collection,
 } from 'discord.js';
-import { initializeApp } from 'firebase/app';
-import { connectDatabaseEmulator, getDatabase } from 'firebase/database';
 import { DisTube } from 'distube';
 import { DeezerPlugin } from '@distube/deezer';
 import { YouTubePlugin } from '@distube/youtube';
@@ -112,36 +110,6 @@ export function createClient(): BotClient {
   return client;
 }
 
-/**
- * Initialize Firebase
- */
-export function initializeFirebase(client: BotClient, config: BotConfig): void {
-  try {
-    initializeApp({
-      apiKey: config.firebase.apiKey,
-      authDomain: config.firebase.authDomain,
-      databaseURL: config.firebase.databaseURL,
-      projectId: config.firebase.projectId,
-      storageBucket: config.firebase.storageBucket,
-      messagingSenderId: config.firebase.messagingSenderId,
-      appId: config.firebase.appId,
-      measurementId: config.firebase.measurementId,
-    });
-
-    client.database = getDatabase();
-
-    if ((client as any).mode !== 'start') {
-      connectDatabaseEmulator(
-        client.database,
-        config.emulators.database.host,
-        config.emulators.database.port,
-      );
-    }
-  } catch (error) {
-    console.error('Failed to initialize Firebase:', error);
-    process.exit(1);
-  }
-}
 
 /**
  * Load all handlers
@@ -195,16 +163,11 @@ export async function startBot(client: BotClient): Promise<void> {
     process.exit(1);
   }
 
-  if (!config.firebase.apiKey) {
-    client.logger.warn('CONF: Firebase API_KEY is not configured.');
-  }
 
   if (!config.gemini.apiKey) {
     client.logger.warn('CONF: Gemini API_KEY is not configured.');
   }
 
-  // Initialize Firebase
-  initializeFirebase(client, config);
 
   // Load all handlers
   await loadAllHandlers(client);

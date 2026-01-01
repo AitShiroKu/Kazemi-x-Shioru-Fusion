@@ -28,7 +28,7 @@ export function setupPlayerEvents(client: BotClient): void {
         },
       ]);
 
-    if (client.configs.logger.player?.enable && client.configs.logger.player.webhookURL) {
+    if (client.configs.logger.player?.enable && client.configs.logger.player?.webhookURL) {
       // Send to webhook if configured
       // webhookSend(client.configs.logger.player, { embeds: [webhookLogEmbed] });
     }
@@ -54,7 +54,7 @@ export function setupPlayerEvents(client: BotClient): void {
         },
       ]);
 
-    if (client.configs.logger.player?.enable && client.configs.logger.player.webhookURL) {
+    if (client.configs.logger.player?.enable && client.configs.logger.player?.webhookURL) {
       // Send to webhook if configured
     }
 
@@ -80,7 +80,7 @@ export function setupPlayerEvents(client: BotClient): void {
         },
       ]);
 
-    if (client.configs.logger.player?.enable && client.configs.logger.player.webhookURL) {
+    if (client.configs.logger.player?.enable && client.configs.logger.player?.webhookURL) {
       // Send to webhook if configured
     }
   });
@@ -98,7 +98,7 @@ export function setupPlayerEvents(client: BotClient): void {
         },
       ]);
 
-    if (client.configs.logger.player?.enable && client.configs.logger.player.webhookURL) {
+    if (client.configs.logger.player?.enable && client.configs.logger.player?.webhookURL) {
       // Send to webhook if configured
     }
 
@@ -123,7 +123,7 @@ export function setupPlayerEvents(client: BotClient): void {
         },
       ]);
 
-    if (client.configs.logger.player?.enable && client.configs.logger.player.webhookURL) {
+    if (client.configs.logger.player?.enable && client.configs.logger.player?.webhookURL) {
       // Send to webhook if configured
     }
 
@@ -147,7 +147,7 @@ export function setupPlayerEvents(client: BotClient): void {
         },
       ]);
 
-    if (client.configs.logger.player?.enable && client.configs.logger.player.webhookURL) {
+    if (client.configs.logger.player?.enable && client.configs.logger.player?.webhookURL) {
       // Send to webhook if configured
     }
 
@@ -190,7 +190,7 @@ export function setupPlayerEvents(client: BotClient): void {
         },
       ]);
 
-    if (client.configs.logger.player?.enable && client.configs.logger.player.webhookURL) {
+    if (client.configs.logger.player?.enable && client.configs.logger.player?.webhookURL) {
       // Send to webhook if configured
     }
 
@@ -217,7 +217,7 @@ export function setupPlayerEvents(client: BotClient): void {
         },
       ]);
 
-    if (client.configs.logger.player?.enable && client.configs.logger.player.webhookURL) {
+    if (client.configs.logger.player?.enable && client.configs.logger.player?.webhookURL) {
       // Send to webhook if configured
     }
 
@@ -242,7 +242,7 @@ export function setupPlayerEvents(client: BotClient): void {
         },
       ]);
 
-    if (client.configs.logger.player?.enable && client.configs.logger.player.webhookURL) {
+    if (client.configs.logger.player?.enable && client.configs.logger.player?.webhookURL) {
       // Send to webhook if configured
     }
 
@@ -273,7 +273,7 @@ export function setupPlayerEvents(client: BotClient): void {
         },
       ]);
 
-    if (client.configs.logger.player?.enable && client.configs.logger.player.webhookURL) {
+    if (client.configs.logger.player?.enable && client.configs.logger.player?.webhookURL) {
       // Send to webhook if configured
     }
   });
@@ -291,7 +291,7 @@ export function setupPlayerEvents(client: BotClient): void {
         },
       ]);
 
-    if (client.configs.logger.player?.enable && client.configs.logger.player.webhookURL) {
+    if (client.configs.logger.player?.enable && client.configs.logger.player?.webhookURL) {
       // Send to webhook if configured
     }
 
@@ -316,7 +316,7 @@ export function setupPlayerEvents(client: BotClient): void {
         },
       ]);
 
-    if (client.configs.logger.player?.enable && client.configs.logger.player.webhookURL) {
+    if (client.configs.logger.player?.enable && client.configs.logger.player?.webhookURL) {
       // Send to webhook if configured
     }
 

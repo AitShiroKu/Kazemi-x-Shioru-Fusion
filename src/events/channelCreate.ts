@@ -39,73 +39,8 @@ export async function execute(client: any, channel: any) {
       },
     ]);
 
-  // Initialize guild data
-  const guildRef = client.database.ref(`guilds/${guild.id}`);
-  const guildSnapshot = await guildRef.get();
-
-  if (!guildSnapshot.exists()) {
-    await guildRef.set({
-      joinedAt: guild.joinedAt?.toISOString() ?? new Date(guild.createdAt).toISOString(),
-      createdAt: new Date(guild.createdAt).toISOString(),
-      description: guild.description ?? '',
-      iconURL: guild.iconURL() ?? '',
-      preferredLocale: guild.preferredLocale ?? 'en-US',
-      memberCount: guild.memberCount ?? 0,
-      name: guild.name ?? '',
-      verified: guild.verified ?? false,
-      language: {
-        type: 'AUTO',
-        locale: 'en-US',
-      },
-      notify: {
-        message: { enable: true },
-        join: { enable: true },
-        leave: { enable: true },
-        ban: { enable: true },
-        kick: { enable: false },
-        member: { enable: true },
-        role: { enable: true },
-      },
-      djs: {
-        enable: true,
-        roles: [],
-        users: [],
-      },
-      level: {
-        enable: true,
-        multiplier: 1,
-        xp: 15,
-      },
-      afk: {},
-      automod: {
-        enable: false,
-        antiBot: {
-          enable: false,
-          all: false,
-          bots: [],
-        },
-        antiSpam: {
-          enable: false,
-          limit: 5,
-          muteTime: 30000,
-        },
-        antiLink: {
-          enable: false,
-          muteTime: 30000,
-        },
-        antiMassMention: {
-          enable: false,
-          limit: 10,
-          muteTime: 30000,
-        },
-      },
-    });
-
-    client.logger.info(`Initialized data for guild ${guild.name} (${guild.id})`);
-  }
-
   // Send webhook notification
-  if (client.configs.logger.channelCreate.enable && client.configs.logger.channelCreate.webhookURL) {
+  if (client.configs.logger.channelCreate?.enable && client.configs.logger.channelCreate?.webhookURL) {
     await (client as any).webhookSend(client.configs.logger.channelCreate.webhookURL, {
       embeds: [channelCreateEmbed],
     });

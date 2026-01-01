@@ -37,7 +37,7 @@ export async function execute(client: any) {
   client.logger.info(`Bot is ready to work on servers! (${startupTime}s)`);
 
   // Send webhook notification
-  if (client.configs.logger.ready.enable && client.configs.logger.ready.webhookURL) {
+  if (client.configs.logger.ready?.enable && client.configs.logger.ready?.webhookURL) {
     const webhookLogEmbed = new EmbedBuilder()
       .setColor(Colors.Green)
       .setTitle('✅・Ready')

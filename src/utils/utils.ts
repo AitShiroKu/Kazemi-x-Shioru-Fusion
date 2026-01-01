@@ -1,7 +1,7 @@
 export function formatBotReply(text: string): string {
-  const header = `> **🌸 Kazemi Miharu Response**\n`;
+  const header = `**🌸 Kuniko Zakura Response**\n`;
   const quoted = text.split('\n').map((line) => `> ${line}`).join('\n');
-  const warning = "> ### ❗ Don't Share any your personal information or your password to Ai";
+  const warning = "### ❗ Don't Share any your personal information or your password to Ai";
   const quoteBlock = '> ';
   return `${header}${quoteBlock}\n${quoteBlock}\n${quoted}\n${quoteBlock}\n${warning}`;
 }
@@ -110,8 +110,8 @@ export function extractCodeBlocks(text: string): { cleanText: string; codeBlocks
 
     // Replace code block with placeholder in clean text
     cleanText = cleanText.substring(0, matchData.start) +
-                `[CODE_BLOCK_${index}]` +
-                cleanText.substring(matchData.end);
+      `[CODE_BLOCK_${index}]` +
+      cleanText.substring(matchData.end);
     index++;
   }
 

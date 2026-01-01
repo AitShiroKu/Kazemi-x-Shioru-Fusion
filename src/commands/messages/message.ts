@@ -5,7 +5,6 @@ import {
   ApplicationIntegrationType,
   ChatInputCommandInteraction,
 } from 'discord.js';
-import type { Command } from '../../types/index.js';
 
 export const data = new SlashCommandBuilder()
   .setName('message')

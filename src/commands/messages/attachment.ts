@@ -5,7 +5,6 @@ import {
   ApplicationIntegrationType,
   ChatInputCommandInteraction,
 } from 'discord.js';
-import type { Command } from '../../types/index.js';
 
 export const data = new SlashCommandBuilder()
   .setName('attachment')
@@ -61,8 +60,8 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   await interaction.reply({
     content: inputChannel
       ? i18n('commands.attachment.sended_to_channel', {
-          id: inputChannel.id,
-        })
+        id: inputChannel.id,
+      })
       : i18n('commands.attachment.sended'),
     ephemeral: true,
   });
