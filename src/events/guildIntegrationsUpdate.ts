@@ -3,13 +3,11 @@ import {
   EmbedBuilder,
   Colors,
 } from 'discord.js';
-import type { Event } from '../types/index.js';
 
 export const name = Events.GuildIntegrationsUpdate;
 export const once = false;
 
-export async function execute(guild: any) {
-  const client = guild.client;
+export async function execute(client: any, guild: any) {
 
   const guildIntegrationsUpdateEmbed = new EmbedBuilder()
     .setTitle(

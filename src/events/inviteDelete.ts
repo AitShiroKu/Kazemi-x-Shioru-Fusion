@@ -8,8 +8,8 @@ import type { Event } from '../types/index.js';
 export const name = Events.InviteDelete;
 export const once = false;
 
-export async function execute(invite: any) {
-  const client = invite.client;
+export async function execute(client: any, invite: any) {
+
   const guild = invite.guild;
 
   const inviteDeleteEmbed = new EmbedBuilder()

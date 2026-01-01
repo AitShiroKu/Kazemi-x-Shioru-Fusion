@@ -8,8 +8,8 @@ import type { Event } from '../types/index.js';
 export const name = Events.GuildSoundboardSoundCreate;
 export const once = false;
 
-export async function execute(soundboardSound: any) {
-  const client = soundboardSound.client;
+export async function execute(client: any, soundboardSound: any) {
+
   const guild = soundboardSound.guild;
 
   const guildSoundboardSoundCreateEmbed = new EmbedBuilder()

@@ -8,8 +8,8 @@ import type { Event } from '../types/index.js';
 export const name = Events.GuildRoleCreate;
 export const once = false;
 
-export async function execute(role: any) {
-  const client = role.client;
+export async function execute(client: any, role: any) {
+
   const guild = role.guild;
 
   const roleCreateEmbed = new EmbedBuilder()

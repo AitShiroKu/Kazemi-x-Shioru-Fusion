@@ -8,8 +8,8 @@ import type { Event } from '../types/index.js';
 export const name = Events.ThreadUpdate;
 export const once = false;
 
-export async function execute(oldThread: any, newThread: any) {
-  const client = newThread.client;
+export async function execute(client: any, oldThread: any, newThread: any) {
+
   const guild = newThread.guild;
 
   const threadUpdateEmbed = new EmbedBuilder()

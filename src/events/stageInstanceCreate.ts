@@ -8,8 +8,8 @@ import type { Event } from '../types/index.js';
 export const name = Events.StageInstanceCreate;
 export const once = false;
 
-export async function execute(stageInstance: any) {
-  const client = stageInstance.client;
+export async function execute(client: any, stageInstance: any) {
+
   const guild = stageInstance.guild;
 
   const stageInstanceCreateEmbed = new EmbedBuilder()

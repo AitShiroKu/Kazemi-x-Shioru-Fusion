@@ -8,7 +8,7 @@ import type { Event } from '../types/index.js';
 export const name = Events.Warn;
 export const once = false;
 
-export async function execute(info: string) {
+export async function execute(client: any, info: string) {
   const webhookLogEmbed = new EmbedBuilder()
     .setTimestamp()
     .setColor(Colors.Orange)
@@ -16,7 +16,7 @@ export async function execute(info: string) {
     .setDescription(`\`\`\`${info}\`\`\``);
 
   // Send webhook notification
-  const client = (global as any).client;
+
   if (client?.configs?.logger?.warn?.enable && client?.configs?.logger?.warn?.webhookURL) {
     await (client as any).webhookSend(
       client.configs.logger.warn.webhookURL,

@@ -8,12 +8,11 @@ import type { Event } from '../types/index.js';
 export const name = Events.ThreadMembersUpdate;
 export const once = false;
 
-export async function execute(
-  addedMembers: any,
+export async function execute(client: any, addedMembers: any,
   removedMembers: any,
   thread: any,
 ) {
-  const client = thread.client;
+
   const guild = thread.guild;
 
   // Initialize guild data

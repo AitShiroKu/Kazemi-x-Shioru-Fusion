@@ -5,7 +5,6 @@ import {
   ActivityType,
   PresenceUpdateStatus,
 } from 'discord.js';
-import type { Event } from '../types/index.js';
 
 export const name = Events.ClientReady;
 export const once = true;

@@ -8,8 +8,7 @@ import type { Event } from '../types/index.js';
 export const name = Events.GuildMembersChunk;
 export const once = false;
 
-export async function execute(_members: any, guild: any, _chunk: any) {
-  const client = guild.client;
+export async function execute(client: any, _members: any, guild: any, _chunk: any) {
 
   const guildMembersChunkEmbed = new EmbedBuilder()
     .setTitle(

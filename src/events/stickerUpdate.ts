@@ -9,8 +9,8 @@ import type { Event } from '../types/index.js';
 export const name = Events.GuildStickerUpdate;
 export const once = false;
 
-export async function execute(oldSticker: any, newSticker: any) {
-  const client = newSticker.client;
+export async function execute(client: any, oldSticker: any, newSticker: any) {
+
   const guild = newSticker.guild;
 
   const stickerUpdateEmbed = new EmbedBuilder()

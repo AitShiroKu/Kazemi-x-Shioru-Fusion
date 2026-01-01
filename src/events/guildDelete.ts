@@ -4,8 +4,7 @@ import type { Event } from '../types/index.js';
 export const name = Events.GuildDelete;
 export const once = false;
 
-export async function execute(guild: any) {
-  const client = guild.client;
+export async function execute(client: any, guild: any) {
 
   // Update statistics
   await (client as any).fetchStatistics('POST', 'size', client);

@@ -8,8 +8,8 @@ import type { Event } from '../types/index.js';
 export const name = Events.WebhooksUpdate;
 export const once = false;
 
-export async function execute(channel: any) {
-  const client = channel.client;
+export async function execute(client: any, channel: any) {
+
   const guild = channel.guild;
 
   const webhookUpdateEmbed = new EmbedBuilder()

@@ -8,10 +8,9 @@ import type { Event } from '../types/index.js';
 export const name = Events.GuildMemberRemove;
 export const once = false;
 
-export async function execute(member: any) {
+export async function execute(client: any, member: any) {
   if (member.user.bot) return;
 
-  const client = member.client;
   const guild = member.guild;
 
   // Fetch member data

@@ -8,8 +8,8 @@ import type { Event } from '../types/index.js';
 export const name = Events.GuildMemberUpdate;
 export const once = false;
 
-export async function execute(oldMember: any, newMember: any) {
-  const client = newMember.client;
+export async function execute(client: any, oldMember: any, newMember: any) {
+
   const guild = newMember.guild;
 
   const guildMemberUpdateEmbed = new EmbedBuilder()

@@ -3,13 +3,12 @@ import {
   EmbedBuilder,
   Colors,
 } from 'discord.js';
-import type { Event } from '../types/index.js';
 
 export const name = Events.GuildEmojiDelete;
 export const once = false;
 
-export async function execute(emoji: any) {
-  const client = emoji.client;
+export async function execute(client: any, emoji: any) {
+
   const guild = emoji.guild;
 
   const emojiDeleteEmbed = new EmbedBuilder()

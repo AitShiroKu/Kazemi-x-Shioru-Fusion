@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from '@google/generative-ai';
-import { GEMINI_API_KEY, GEMINI_MODEL, GEMINI_TEMPERATURE, GEMINI_MAX_OUTPUT_TOKENS, DEBUG_MODE } from '../config.js';
+import { GEMINI_API_KEY, GEMINI_MODEL, GEMINI_TEMPERATURE, GEMINI_MAX_OUTPUT_TOKENS, DEBUG_MODE } from '../services/config/config.js';
 import type { MemoryData, UserMemory, MemoryMessage } from './memory.js';
 
 const SYSTEM_PROMPT = process.env.SYSTEM_PROMPT || `You are Kuniko Zakura, a friendly anime girl who is always responsive and cute with emoji. Please respond with the user's latest message language.`;
@@ -43,7 +43,7 @@ export async function geminiResponse(
     console.log(`${username}: Inappropriate content detected`);
     console.log('returning Warning message');
     if (DEBUG_MODE === true) {
-    console.log(`[DEBUG] Prompt flagged as inappropriate: ${prompt}`);
+      console.log(`[DEBUG] Prompt flagged as inappropriate: ${prompt}`);
     }
     return '❌ ขออภัยค่ะ เนื้อหานี้ไม่เหมาะสม';
   }
@@ -56,7 +56,7 @@ export async function geminiResponse(
     createdAt: Date.now(),
   };
   if (DEBUG_MODE === true) {
-  console.log(`[DEBUG] User memory loaded:`, JSON.stringify(userMemory, null, 2));
+    console.log(`[DEBUG] User memory loaded:`, JSON.stringify(userMemory, null, 2));
   }
   let conversationHistory: MemoryMessage[] = userMemory.history;
 
@@ -97,7 +97,7 @@ export async function geminiResponse(
             .join('\n\n') + `\n\n${prompt}`;
       }
       if (DEBUG_MODE === true) {
-      console.log('[DEBUG] Generated context:', context);
+        console.log('[DEBUG] Generated context:', context);
       }
       const result = await model.generateContent({
         contents: [
@@ -115,7 +115,7 @@ export async function geminiResponse(
       });
 
       if (DEBUG_MODE === true) {
-      console.log('[DEBUG] Raw API response:', JSON.stringify(result, null, 2));
+        console.log('[DEBUG] Raw API response:', JSON.stringify(result, null, 2));
       }
       const response: any = (result as any).response;
 
@@ -140,7 +140,7 @@ export async function geminiResponse(
 
       if (!text) {
         if (DEBUG_MODE === true) {
-        console.log('[DEBUG] No text found in response');
+          console.log('[DEBUG] No text found in response');
         }
         lastError = new Error('No text found in response');
         retryCount++;
@@ -150,7 +150,7 @@ export async function geminiResponse(
 
       if (typeof text !== 'string') {
         if (DEBUG_MODE === true) {
-        console.log('[DEBUG] Response text is not a string:', typeof text);
+          console.log('[DEBUG] Response text is not a string:', typeof text);
         }
         lastError = new Error('Response text is not a string');
         retryCount++;
@@ -160,7 +160,7 @@ export async function geminiResponse(
 
       if (text.trim() === '') {
         if (DEBUG_MODE === true) {
-        console.log('[DEBUG] Response text is empty after trimming');
+          console.log('[DEBUG] Response text is empty after trimming');
         }
         lastError = new Error('Empty response received');
         retryCount++;
@@ -172,8 +172,8 @@ export async function geminiResponse(
       let formattedResponse = text;
       if (response.thinkingSteps && response.thinkingSteps.length > 0) {
         if (DEBUG_MODE === true) {
-        console.log('[DEBUG] Processing thinking steps:', response.thinkingSteps);
-          }
+          console.log('[DEBUG] Processing thinking steps:', response.thinkingSteps);
+        }
         formattedResponse = '🤔 **ขั้นตอนการคิด:**\n';
         response.thinkingSteps.forEach((step: string, index: number) => {
           formattedResponse += `${index + 1}. ${step}\n`;
@@ -181,7 +181,7 @@ export async function geminiResponse(
         formattedResponse += '\n💭 **คำตอบ:**\n' + text;
       }
       if (DEBUG_MODE === true) {
-      console.log('[DEBUG] Final formatted response:', formattedResponse);
+        console.log('[DEBUG] Final formatted response:', formattedResponse);
       }
 
       // บันทึกการตอบกลับลงในประวัติ

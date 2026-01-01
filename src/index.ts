@@ -53,14 +53,7 @@
  * SOFTWARE.
  */
 
+import { startBot } from './utils/discord.js';
 
-import { createClient, startBot } from './utils/client.js';
-
-const client = createClient();
-try {
-  await startBot(client);
-} catch (error) {
-  (client as any).logger?.fatal?.(error, 'Failed to start bot');
-  process.exit(1);
-}
+startBot();
 

@@ -9,8 +9,8 @@ import type { Event } from '../types/index.js';
 export const name = Events.VoiceStateUpdate;
 export const once = false;
 
-export async function execute(oldState: any, newState: any) {
-  const client = newState.client;
+export async function execute(client: any, oldState: any, newState: any) {
+
   const guild = newState.guild;
 
   const voiceStateUpdateEmbed = new EmbedBuilder()

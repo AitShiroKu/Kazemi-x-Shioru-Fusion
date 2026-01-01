@@ -1,5 +1,5 @@
 export function formatBotReply(text: string): string {
-  const header = `> **🌸 Kuniko Zakura Response**\n`;
+  const header = `> **🌸 Kazemi Miharu Response**\n`;
   const quoted = text.split('\n').map((line) => `> ${line}`).join('\n');
   const warning = "> ### ❗ Don't Share any your personal information or your password to Ai";
   const quoteBlock = '> ';

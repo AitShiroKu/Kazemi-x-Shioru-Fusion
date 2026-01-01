@@ -3,13 +3,12 @@ import {
   EmbedBuilder,
   Colors,
 } from 'discord.js';
-import type { Event } from '../types/index.js';
 
 export const name = Events.GuildEmojiUpdate;
 export const once = false;
 
-export async function execute(oldEmoji: any, newEmoji: any) {
-  const client = newEmoji.client;
+export async function execute(client: any, oldEmoji: any, newEmoji: any) {
+
   const guild = newEmoji.guild;
 
   const emojiUpdateEmbed = new EmbedBuilder()

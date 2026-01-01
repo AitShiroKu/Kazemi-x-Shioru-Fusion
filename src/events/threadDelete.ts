@@ -8,8 +8,8 @@ import type { Event } from '../types/index.js';
 export const name = Events.ThreadDelete;
 export const once = false;
 
-export async function execute(thread: any) {
-  const client = thread.client;
+export async function execute(client: any, thread: any) {
+
   const guild = thread.guild;
 
   const threadDeleteEmbed = new EmbedBuilder()

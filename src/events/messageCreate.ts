@@ -6,7 +6,6 @@ import {
   ButtonStyle,
 } from 'discord.js';
 import { Events } from 'discord.js';
-import type { Event } from '../types/index.js';
 
 export const name = Events.MessageCreate;
 export const once = false;

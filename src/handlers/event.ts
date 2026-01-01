@@ -52,9 +52,9 @@ export function loadEvents(client: BotClient): void {
       }
 
       if (event.once) {
-        client.once(event.name, (...args) => event.execute(...args));
+        client.once(event.name, (...args) => event.execute(client, ...args));
       } else {
-        client.on(event.name, (...args) => event.execute(...args));
+        client.on(event.name, (...args) => event.execute(client, ...args));
       }
 
       client.logger.info(`Loaded event: ${event.name}`);

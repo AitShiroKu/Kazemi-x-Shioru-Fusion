@@ -12,7 +12,7 @@ dotenv.config();
 const configJson = JSON.parse(readFileSync('./config.json', 'utf-8'));
 
 export const config: BotConfig = {
-  token: process.env.TOKEN || '',
+  token: process.env.DISCORD_TOKEN || '',
   clientId: process.env.CLIENT_ID || '',
   gemini: {
     apiKey: process.env.GEMINI_API_KEY || configJson.gemini?.apiKey || '',
@@ -66,6 +66,11 @@ export default config;
 export const DISCORD_TOKEN = config.token;
 export const SUPPORT_URL = process.env.SUPPORT_URL || '';
 export const SYSTEM_PROMPT = process.env.SYSTEM_PROMPT || configJson.systemMessage?.prompt || '';
+export const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+export const GEMINI_MODEL: string = process.env.GEMINI_MODEL || config?.gemini?.model || 'gemini-2.5-flash';
+export const GEMINI_TEMPERATURE: number = Number(process.env.GEMINI_TEMPERATURE ?? config?.gemini?.temperature ?? 0.7);
+export const GEMINI_MAX_OUTPUT_TOKENS: number = Number(process.env.GEMINI_MAX_OUTPUT_TOKENS ?? config?.gemini?.maxOutputTokens ?? 1024);
+export const DEBUG_MODE: boolean = process.env.DEBUG_MODE === 'true' || false;
 
 // Validate required configuration
 if (!config.token) {

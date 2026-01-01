@@ -3,13 +3,12 @@ import {
   EmbedBuilder,
   Colors,
 } from 'discord.js';
-import type { Event } from '../types/index.js';
 
 export const name = Events.ChannelUpdate;
 export const once = false;
 
-export async function execute(oldChannel: any, newChannel: any) {
-  const client = oldChannel.client;
+export async function execute(client: any, oldChannel: any, newChannel: any) {
+
   const guild = oldChannel.guild;
 
   const channelUpdateEmbed = new EmbedBuilder()

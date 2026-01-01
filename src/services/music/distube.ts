@@ -24,9 +24,6 @@ export function initializeMusicPlayer(client: Client, config: BotConfig): DisTub
   }
 
   const options = {
-    leaveOnEmpty: config.music.leaveOnEmpty,
-    leaveOnStop: config.music.leaveOnStop,
-    leaveOnEnd: config.music.leaveOnEnd,
     plugins: [
       new DeezerPlugin(),
       new YouTubePlugin(),

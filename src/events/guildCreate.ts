@@ -3,7 +3,6 @@ import {
   EmbedBuilder,
   Colors,
 } from 'discord.js';
-import type { Event } from '../types/index.js';
 
 export const name = Events.GuildCreate;
 export const once = false;

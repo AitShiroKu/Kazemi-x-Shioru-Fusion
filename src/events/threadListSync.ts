@@ -8,8 +8,7 @@ import type { Event } from '../types/index.js';
 export const name = Events.ThreadListSync;
 export const once = false;
 
-export async function execute(threads: any, guild: any) {
-  const client = guild.client;
+export async function execute(client: any, threads: any, guild: any) {
 
   const threadListSyncEmbed = new EmbedBuilder()
     .setTitle(client.i18n.t('events.threadListSync.thread_notification'))

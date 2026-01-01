@@ -11,9 +11,7 @@ import type { Event } from '../types/index.js';
 export const name = Events.InteractionCreate;
 export const once = false;
 
-export async function execute(interaction: ChatInputCommandInteraction | AutocompleteInteraction | MessageContextMenuCommandInteraction | UserContextMenuCommandInteraction) {
-  const client = interaction.client as any;
-
+export async function execute(client: any, interaction: ChatInputCommandInteraction | AutocompleteInteraction | MessageContextMenuCommandInteraction | UserContextMenuCommandInteraction) {
   if (interaction.user.bot) return;
 
   // Auto-initialize guild data

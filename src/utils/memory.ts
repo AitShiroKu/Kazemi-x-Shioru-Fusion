@@ -35,6 +35,10 @@ const cleanupOldHistory = (memory: MemoryData): MemoryData => {
 
 export const loadMemory = (): MemoryData => {
   try {
+    if (!existsSync('data')) {
+      console.log('Creating data directory');
+      mkdirSync('data', { recursive: true });
+    }
     if (!existsSync('data/memory.json')) {
       console.log('Creating new memory file');
       writeFileSync('data/memory.json', JSON.stringify({}, null, 2), 'utf-8');
@@ -52,7 +56,7 @@ export const saveMemory = (memory: MemoryData): void => {
   try {
     if (!existsSync('data')) {
       console.log('Creating data directory');
-      mkdirSync('data');
+      mkdirSync('data', { recursive: true });
     }
     writeFileSync('data/memory.json', JSON.stringify(memory, null, 2), 'utf-8');
     console.log('Memory saved successfully');

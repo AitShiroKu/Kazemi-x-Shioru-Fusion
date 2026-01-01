@@ -2,18 +2,25 @@ import {
   Client,
   GatewayIntentBits,
   PermissionsBitField,
-  ActionRowBuilder,
-  ButtonBuilder,
-  ButtonStyle,
-  type Message,
+  Collection,
   AttachmentBuilder,
+  WebhookClient,
+  EmbedBuilder,
 } from 'discord.js';
-import { loadMemory, saveMemory, type MemoryData, type UserMemory } from './memory.js';
+import { loadMemory, saveMemory, type MemoryData } from './memory.js';
 import { geminiResponse } from './gemini.js';
-import { formatBotReply, splitMessageWithCodeBlocks } from './utils.js';
-import dotenv from 'dotenv';
-import { GEMINI_MODEL } from '../config.js';
-dotenv.config();
+import { splitMessageWithCodeBlocks, formatBotReply } from './utils.js';
+import { config } from '../services/config/config.js';
+import { initializeDatabase, getDatabaseRef } from '../services/database/firebase.js';
+import { initI18n } from '../services/i18n/i18n.js';
+import { initializeMusicPlayer } from '../services/music/distube.js';
+import { loadEvents } from '../handlers/event.js';
+import { loadCommands, registerCommands } from '../handlers/command.js';
+import { loadContexts } from '../handlers/context.js';
+import { setupProcessHandlers } from '../handlers/process.js';
+import { setupPlayerEvents } from '../handlers/player.js';
+import logger from '../services/logger/logger.js';
+import type { BotClient } from '../types/index.js';
 
 // Set up Discord Bot with required intents
 const client = new Client({
@@ -23,132 +30,143 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
     GatewayIntentBits.GuildMessageReactions,
     GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildMembers,
   ],
-});
+}) as BotClient;
 
-// Load memory from file
-const userConversations: MemoryData = loadMemory();
-
-const generateInviteLink = () => {
-  const permissions = new PermissionsBitField([
-    PermissionsBitField.Flags.SendMessages,
-    PermissionsBitField.Flags.ManageMessages,
-    PermissionsBitField.Flags.ReadMessageHistory,
-    PermissionsBitField.Flags.ViewChannel,
-    PermissionsBitField.Flags.AddReactions,
-    PermissionsBitField.Flags.UseExternalEmojis,
-    PermissionsBitField.Flags.Connect,
-    PermissionsBitField.Flags.Speak,
-  ]);
-  return `https://discord.com/oauth2/authorize?client_id=${client.user!.id}&permissions=${permissions.bitfield}&scope=bot`;
+// Initialize BotClient properties
+client.commands = new Collection();
+client.contexts = new Collection();
+client.cooldowns = new Collection();
+client.logger = logger;
+client.configs = config;
+client.temp = {
+  startup: {
+    start: Date.now(),
+    end: 0,
+  },
+  commands: new Collection(),
+  contexts: new Collection(),
 };
 
-client.once('ready', () => {
-  console.log(`✅ บอทล็อกอินเป็น ${client.user!.tag}`);
-  console.log(`🔗 เชิญบอทเข้าร่วมเซิร์ฟเวอร์: ${generateInviteLink()}`);
-  console.log(`🌐 กําลังใช้งานใน ${client.guilds.cache.size} เซิร์ฟเวอร์`);
-  console.log(`🚀 กำลังใช้งาน Model ${GEMINI_MODEL}`);
-});
-
-client.on('messageCreate', async (message: Message) => {
-  if (message.author.bot) return;
-
-  const userId = message.author.id;
-  const username = message.author.globalName || message.author.username;
-
-  // Initialize userMemory at the start
-  let userMemory: UserMemory = userConversations[userId] || {
-    username,
-    language: 'root',
-    lastActivity: Date.now(),
-    history: [],
-    createdAt: Date.now(),
-  };
-
-const SUPPORT_URL = process.env.SUPPORT_URL;
-
-  // คำสั่งรีเซ็ตความทรงจำ
-
-  const isStartCommand = message.content.toLowerCase().startsWith('!chat');
-  const isReply = message.reference?.messageId;
-
-  const BelowButton = new ActionRowBuilder<ButtonBuilder>().addComponents(
-    new ButtonBuilder().setLabel('Support').setEmoji('📝').setStyle(ButtonStyle.Link).setURL(SUPPORT_URL || 'https://example.com'),
-    new ButtonBuilder().setLabel('Invite Me').setEmoji('🌸').setStyle(ButtonStyle.Link).setURL(generateInviteLink())
-  );
-
-  // ถ้าเป็นคำสั่งเริ่มต้น !chat
-  if (isStartCommand) {
-    const prompt = message.content.slice(5).trim(); // ตัด "!chat" ออก
-    if (!prompt) {
-      await message.reply({
-        content: formatBotReply(
-          `💬 สวัสดีค่ะ! คุณ ${username} ตอบกลับข้อความของหนู พร้อมข้อความ เพื่อเริ่มสนทนาได้เลยนะคะ 💖🌸`
-        ),
-        components: [BelowButton],
-      });
-      return;
-    }
-
-    const response = await geminiResponse(prompt, userId, username, userConversations, saveMemory);
-    const messageSegments = splitMessageWithCodeBlocks(response);
-    for (const segment of messageSegments) {
-      const replyOptions: any = {
-        content: formatBotReply(segment.text),
-        components: [BelowButton],
-      };
-
-      if (segment.attachment) {
-        const attachment = new AttachmentBuilder(
-          Buffer.from(segment.attachment.content, 'utf-8'),
-          { name: segment.attachment.name }
-        );
-        replyOptions.files = [attachment];
-      }
-
-      await message.reply(replyOptions);
-    }
-    return;
+/**
+ * Utility to send webhook messages
+ */
+const webhookSend = async (url: string, message: any) => {
+  try {
+    const webhook = new WebhookClient({ url });
+    return await webhook.send(message);
+  } catch (err) {
+    client.logger.error(err, 'Failed to send webhook');
   }
+};
 
-  // ถ้าเป็นการตอบกลับข้อความ
-  if (isReply) {
-    try {
-      const repliedMessage = await message.channel.messages
-        .fetch(message.reference!.messageId as string)
-        .catch(() => null);
-      if (!repliedMessage || repliedMessage.author.id !== client.user!.id) return;
+/**
+ * Utility to submit notifications based on guild settings
+ */
+const submitNotification = async (guild: any, eventName: string, embedData: EmbedBuilder) => {
+  try {
+    const guildRef = client.database.ref(`guilds/${guild.id}`);
+    const snapshot = await guildRef.get();
+    if (!snapshot.exists()) return;
 
-      const response = await geminiResponse(message.content, userId, username, userConversations, saveMemory);
-      const messageSegments = splitMessageWithCodeBlocks(response);
+    const guildData = snapshot.val();
+    const notifyConfig = guildData.notify?.[eventName.toLowerCase()] || guildData.notify?.[eventName];
 
+    if (notifyConfig?.enable) {
+      // Use configured channel or default to system channel/first text channel
+      const channelId = notifyConfig.channelId || guild.systemChannelId;
+      const channel = guild.channels.cache.get(channelId);
 
-      for (const segment of messageSegments) {
-        const replyOptions: any = {
-          content: formatBotReply(segment.text),
-          components: [BelowButton]
-        };
+      if (channel && channel.isTextBased()) {
+        await channel.send({ embeds: [embedData] });
+      }
+    }
+  } catch (err) {
+    client.logger.error(err, `Failed to submit notification for ${eventName}`);
+  }
+};
 
-        if (segment.attachment) {
-          const attachment = new AttachmentBuilder(
-            Buffer.from(segment.attachment.content, 'utf-8'),
-            { name: segment.attachment.name }
-          );
-          replyOptions.files = [attachment];
+/**
+ * Utility to initialize or update guild data
+ */
+const initializeData = async (guild: any) => {
+  try {
+    const guildRef = client.database.ref(`guilds/${guild.id}`);
+    const snapshot = await guildRef.get();
+
+    if (!snapshot.exists()) {
+      await guildRef.set({
+        joinedAt: guild.joinedAt?.toISOString() || new Date().toISOString(),
+        name: guild.name,
+        memberCount: guild.memberCount,
+        notify: {
+          message: { enable: true },
+          join: { enable: true },
+          leave: { enable: true },
         }
-
-        await message.reply(replyOptions);
-      }
-    } catch (error) {
-      console.error('Error in message handling:', error);
-      await message.reply({
-        content: formatBotReply('❌ ขออภัยค่ะ เกิดข้อผิดพลาดในการประมวลผล'),
-        components: [BelowButton],
       });
     }
+  } catch (err) {
+    client.logger.error(err, `Failed to initialize data for guild ${guild.id}`);
   }
-});
+};
 
-export function startBot() {
-    client.login(process.env.DISCORD_TOKEN);
-} 
+// Map Kazemi utilities to client for event handlers
+(client as any).geminiResponse = geminiResponse;
+(client as any).splitMessageWithCodeBlocks = splitMessageWithCodeBlocks;
+(client as any).formatBotReply = formatBotReply;
+(client as any).userConversations = loadMemory();
+(client as any).saveMemory = saveMemory;
+(client as any).AttachmentBuilder = AttachmentBuilder;
+(client as any).webhookSend = webhookSend;
+(client as any).submitNotification = submitNotification;
+(client as any).initializeData = initializeData;
+
+export async function startBot() {
+  try {
+    // 1. Setup Process Handlers
+    setupProcessHandlers(client);
+
+    // 2. Initialize Database
+    initializeDatabase(client.configs);
+    const { get, set, child } = await import('firebase/database');
+    client.database = {
+      ref: (path: string) => ({
+        get: () => get(child(getDatabaseRef(), path)),
+        set: (data: any) => set(child(getDatabaseRef(), path), data),
+        transaction: async (fn: any) => {
+          const nodeRef = child(getDatabaseRef(), path);
+          try {
+            const snapshot = await get(nodeRef);
+            const newValue = fn(snapshot.val());
+            if (newValue !== undefined) await set(nodeRef, newValue);
+          } catch (error) {
+            client.logger.error(error, `Transaction failed for ${path}`);
+          }
+        }
+      })
+    };
+
+    // 3. Initialize i18n
+    client.i18n = await initI18n();
+
+    // 4. Initialize Music Player
+    client.player = initializeMusicPlayer(client, client.configs);
+    setupPlayerEvents(client);
+
+    // 5. Load Handlers
+    loadEvents(client);
+    await loadCommands(client);
+    loadContexts(client);
+
+    // 6. Register Slash Commands
+    await registerCommands(client);
+
+    // 7. Login
+    await client.login(config.token);
+  } catch (error) {
+    client.logger.error(error, 'Failed to start bot');
+    process.exit(1);
+  }
+}

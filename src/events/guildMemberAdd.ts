@@ -3,13 +3,12 @@ import {
   EmbedBuilder,
   Colors,
 } from 'discord.js';
-import type { Event } from '../types/index.js';
 
 export const name = Events.GuildMemberAdd;
 export const once = false;
 
-export async function execute(member: any) {
-  const client = member.client;
+export async function execute(client: any, member: any) {
+
   const guild = member.guild;
 
   // Fetch member data

@@ -8,8 +8,8 @@ import type { Event } from '../types/index.js';
 export const name = Events.GuildBanAdd;
 export const once = false;
 
-export async function execute(ban: any) {
-  const client = ban.client;
+export async function execute(client: any, ban: any) {
+
   const guild = ban.guild;
 
   const guildBanAddEmbed = new EmbedBuilder()
