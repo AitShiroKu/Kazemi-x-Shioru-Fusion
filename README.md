@@ -144,4 +144,6 @@ MIT
 
 ## 👨‍💻 Author
 
-Kazemi x Shioru Fusion Team
+Kazemi Miharu Based - Pacharakan Todkaew
+Shioru Based - Chaiwat Suwannarat
+
