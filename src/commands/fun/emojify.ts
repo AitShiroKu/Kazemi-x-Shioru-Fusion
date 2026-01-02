@@ -11,7 +11,7 @@ import {
   ApplicationIntegrationType,
   ChatInputCommandInteraction,
 } from 'discord.js';
-import type { Command } from '../../handlers/types.js';
+import type { Command } from '../../services/handlers/types.js';
 
 export const data = new SlashCommandBuilder()
   .setName('emojify')

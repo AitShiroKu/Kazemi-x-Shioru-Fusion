@@ -4,7 +4,7 @@ import {
   Colors,
 } from 'discord.js';
 import { isVoiceChannelEmpty } from 'distube';
-import type { Event } from '../handlers/types.js';
+import type { Event } from '../services/handlers/types.js';
 
 export const name = Events.VoiceStateUpdate;
 export const once = false;

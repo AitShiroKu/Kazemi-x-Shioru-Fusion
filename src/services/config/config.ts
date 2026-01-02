@@ -5,7 +5,7 @@
 
 import { readFileSync } from 'fs';
 import dotenv from 'dotenv';
-import type { BotConfig } from '../../handlers/types.js';
+import type { BotConfig } from '../handlers/types.js';
 
 dotenv.config();
 

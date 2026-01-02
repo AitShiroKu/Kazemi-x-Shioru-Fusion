@@ -5,7 +5,7 @@
 
 import { EmbedBuilder, Colors, type VoiceBasedChannel } from 'discord.js';
 import { Events, type Queue, type Song, type DisTube } from 'distube';
-import { EmbedBuilderService } from '../services/embed/embedBuilder.js';
+import { EmbedBuilderService } from './embedBuilder.js';
 
 export function setupPlayerEvents(client: any): void {
   const webhookLogEmbed = new EmbedBuilder()

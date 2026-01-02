@@ -1,6 +1,6 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
-import { loadMemory, saveMemory } from '../../utils/memory.js';
-import type { MemoryData } from '../../utils/memory.js';
+import { loadMemory, saveMemory } from '../../services/memory/memory.js';
+import type { MemoryData } from '../../services/memory/memory.js';
 
 export const data = new SlashCommandBuilder()
   .setName('resetmemory')

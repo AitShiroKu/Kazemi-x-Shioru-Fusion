@@ -17,16 +17,16 @@ import { SpotifyPlugin } from '@distube/spotify';
 import { SoundCloudPlugin } from '@distube/soundcloud';
 import { YtDlpPlugin } from '@distube/yt-dlp';
 
-import { BotClient } from '../handlers/types.js';
+import { BotClient } from '../services/handlers/types.js';
 export type { BotClient };
-import { loadCommands, registerCommands } from '../handlers/command.js';
-import { loadEvents } from '../handlers/event.js';
-import { loadContexts } from '../handlers/context.js';
-import { setupPlayerEvents } from '../handlers/player.js';
+import { loadCommands, registerCommands } from '../services/handlers/command.js';
+import { loadEvents } from '../services/handlers/event.js';
+import { loadContexts } from '../services/handlers/context.js';
+import { setupPlayerEvents } from '../services/handlers/player.js';
 import config from '../services/config/config.js';
 import logger from '../services/logger/logger.js';
 import { initI18n, t } from '../services/i18n/i18n.js';
-import { loadMemory, saveMemory } from '../utils/memory.js';
+import { loadMemory, saveMemory } from '../services/memory/memory.js';
 import { formatBotReply, splitMessageWithCodeBlocks } from '../utils/utils.js';
 
 /**

@@ -3,7 +3,7 @@ import {
   EmbedBuilder,
   Colors,
 } from 'discord.js';
-import type { Event } from '../handlers/types.js';
+import type { Event } from '../services/handlers/types.js';
 
 export const name = Events.GuildMembersChunk;
 export const once = false;

@@ -14,7 +14,7 @@ import {
 } from 'discord.js';
 import { join } from 'node:path';
 import { existsSync, readFileSync, unlinkSync } from 'node:fs';
-import type { Command, CommandCategory } from '../../handlers/types.js';
+import type { Command, CommandCategory } from '../../services/handlers/types.js';
 
 export const data = new SlashCommandBuilder()
   .setName('logs')

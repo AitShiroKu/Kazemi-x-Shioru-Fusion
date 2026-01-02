@@ -24,7 +24,7 @@ import {
   Wordle,
   WouldYouRather,
 } from "discord-gamecord";
-import { CommandCategory, type BotClient } from "../../handlers/types.js";
+import { CommandCategory, type BotClient } from "../../services/handlers/types.js";
 
 export const permissions = [PermissionFlagsBits.SendMessages];
 export const category = CommandCategory.FUN;
