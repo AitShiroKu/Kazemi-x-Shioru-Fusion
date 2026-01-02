@@ -38,24 +38,24 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   const client = interaction.client as any;
   const i18n = client.i18n.t;
 
-  const githubBtn = new ButtonBuilder()
-    .setURL('https://github.com/sponsors/Maseshi')
-    .setLabel('Github')
-    .setStyle(ButtonStyle.Link);
-  const patreonBtn = new ButtonBuilder()
-    .setURL('https://www.patreon.com/Maseshi')
-    .setLabel('Patreon')
-    .setStyle(ButtonStyle.Link);
-  const buymeBtn = new ButtonBuilder()
-    .setURL('https://www.buymeacoffee.com/Maseshi')
-    .setLabel('Buy me a green tea')
-    .setStyle(ButtonStyle.Link);
+  // const githubBtn = new ButtonBuilder()
+  //   .setURL('https://github.com/sponsors/Maseshi')
+  //   .setLabel('Github')
+  //   .setStyle(ButtonStyle.Link);
+  // const patreonBtn = new ButtonBuilder()
+  //   .setURL('https://www.patreon.com/Maseshi')
+  //   .setLabel('Patreon')
+  //   .setStyle(ButtonStyle.Link);
+  // const buymeBtn = new ButtonBuilder()
+  //   .setURL('https://www.buymeacoffee.com/Maseshi')
+  //   .setLabel('Buy me a green tea')
+  //   .setStyle(ButtonStyle.Link);
 
-  const row = new ActionRowBuilder() as any;
-  row.setComponents([githubBtn, patreonBtn, buymeBtn]);
+  // const row = new ActionRowBuilder() as any;
+  // row.setComponents([githubBtn, patreonBtn, buymeBtn]);
 
-  await interaction.reply({
-    content: i18n('commands.donate.thank_you_in_advance'),
-    components: [row],
-  });
+  // await interaction.reply({
+  //   content: i18n('commands.donate.thank_you_in_advance'),
+  //   components: [row],
+  // });
 }

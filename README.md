@@ -134,10 +134,6 @@ npm start
 | AI Thinking (Purple) | `0x9370DB` | กำลังคิด |
 | AI Error (Red) | `0xED4245` | ผิดพลาด AI |
 
-## 📚 Documentation
-
-ดูแผนการรวมระบบโดยละเอียดที่ [`plans/fusion-plan.md`](plans/fusion-plan.md)
-
 ## 📄 License
 
 MIT

@@ -1,6 +1,5 @@
 import {
   Message,
-  Partials,
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
@@ -8,7 +7,7 @@ import {
   Events,
   AttachmentBuilder,
 } from 'discord.js';
-import { geminiResponse } from '../utils/gemini.js';
+import { geminiResponse } from '../services/ai/gemini.js';
 import { splitMessageWithCodeBlocks, formatBotReply } from '../utils/utils.js';
 
 export const name = Events.MessageCreate;

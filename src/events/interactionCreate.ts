@@ -6,7 +6,6 @@ import {
   MessageContextMenuCommandInteraction,
   UserContextMenuCommandInteraction,
 } from 'discord.js';
-import type { Event } from '../types/index.js';
 
 export const name = Events.InteractionCreate;
 export const once = false;
@@ -35,11 +34,15 @@ export async function execute(client: any, interaction: any) {
   }
 
   // 2. Handle Replies for Chat Input and Context Menu Commands
+  client.logger.debug('[DEBUG] Starting interaction processing');
+  
   try {
 
     // Handle chat input commands
     if (interaction.isChatInputCommand()) {
       const commandName = interaction.commandName;
+      client.logger.debug(`[DEBUG] Processing chat input command: ${commandName}`);
+      
       const command = client.commands.get(commandName);
 
       if (!command) {
@@ -62,6 +65,7 @@ export async function execute(client: any, interaction: any) {
 
         if (now < expirationTime) {
           const expiredTimestamp = Math.round(expirationTime / 1000);
+          client.logger.debug('[DEBUG] Sending cooldown response');
           await interaction.reply({
             content: client.i18n.t('events.interactionCreate.command_has_cooldown', {
               command_name: commandName,
@@ -80,6 +84,7 @@ export async function execute(client: any, interaction: any) {
       if (command.permissions) {
         const member = interaction.member as any;
         if (!member.permissions.has(command.permissions)) {
+          client.logger.debug('[DEBUG] Sending permission denied response');
           return interaction.reply({
             content: client.i18n.t('events.interactionCreate.client_is_not_allowed', {
               permissions: command.permissions.toArray(),
@@ -90,11 +95,14 @@ export async function execute(client: any, interaction: any) {
       }
 
       try {
+        client.logger.debug(`[DEBUG] About to execute command: ${commandName}`);
         await command.execute(interaction);
+        client.logger.debug(`[DEBUG] Command executed successfully: ${commandName}`);
 
       } catch (error) {
         client.logger.error(error, `Error executing command ${commandName}`);
         if (!interaction.replied && !interaction.deferred) {
+          client.logger.debug('[DEBUG] Sending error reply (not replied/deferred)');
           await interaction.reply({
             content: client.i18n.t('events.interactionCreate.error_executing_command', {
               command_name: commandName,
@@ -102,6 +110,7 @@ export async function execute(client: any, interaction: any) {
             ephemeral: true,
           }).catch(() => { });
         } else {
+          client.logger.debug('[DEBUG] Sending error followup (already replied/deferred)');
           await interaction.followUp({
             content: client.i18n.t('events.interactionCreate.error_executing_command', {
               command_name: commandName,

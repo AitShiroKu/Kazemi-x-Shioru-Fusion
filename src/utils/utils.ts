@@ -1,9 +1,10 @@
 export function formatBotReply(text: string): string {
   const header = `**🌸 Kazemi Miharu Response**\n`;
   const quoted = text.split('\n').map((line) => `> ${line}`).join('\n');
-  const warning = "### ❗ Kazemi Miharu can make mistakes \n ## Please check the answer again and Don't Share any your personal information or your password to Ai";
+  const warning = "### ❗ Kazemi Miharu can make mistakes";
+  const subwarning = "**Please double-check the responses again and Don't Share any your personal information or your password to Ai**"
   const quoteBlock = '> ';
-  return `${header}${quoteBlock}\n${quoteBlock}\n${quoted}\n${quoteBlock}\n${warning}`;
+  return `${header}${quoteBlock}\n${quoteBlock}\n${quoted}\n${quoteBlock}\n${warning}\n${subwarning}`;
 }
 
 export function splitMessage(text: string, maxLength: number = 1800): string[] {

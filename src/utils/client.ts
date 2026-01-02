@@ -7,7 +7,6 @@ import {
   Client,
   GatewayIntentBits,
   Partials,
-  PresenceUpdateStatus,
   ActivityType,
   Collection,
 } from 'discord.js';
@@ -32,6 +31,37 @@ import { loadMemory, saveMemory } from '../utils/memory.js';
 import { formatBotReply, splitMessageWithCodeBlocks } from '../utils/utils.js';
 
 /**
+ * Create a beautiful bot presence with rich activity details
+ * Uses Discord's rich presence features for enhanced user experience
+ */
+function createBotPresence() {
+  const botActivities = [
+    {
+      name: '/help',
+      type: ActivityType.Listening,
+      state: '❤️ HNY 2026🎉 | Ready to assist!',
+      details: 'Type /help to see all available commands',
+      timestamps: {
+        start: Date.now(),
+      },
+      emojis: [
+        {
+          name: 'heart',
+          id: null,
+          animated: false,
+        },
+      ],
+    },
+  ];
+
+  return {
+    status: 'online' as const,
+    afk: false,
+    activities: botActivities,
+  };
+}
+
+/**
  * Create and configure Discord client
  */
 export function createClient(): BotClient {
@@ -46,16 +76,7 @@ export function createClient(): BotClient {
       Partials.ThreadMember,
       Partials.User,
     ],
-    presence: {
-      status: PresenceUpdateStatus.Idle,
-      afk: true,
-      activities: [
-        {
-          name: '/help | Beta 1.0',
-          type: ActivityType.Listening,
-        },
-      ],
-    },
+    presence: createBotPresence(),
     intents: [
       // Direct Messages
       GatewayIntentBits.DirectMessages,

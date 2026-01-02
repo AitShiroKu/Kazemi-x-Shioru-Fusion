@@ -7,8 +7,7 @@ import {
     AttachmentBuilder,
     EmbedBuilder,
 } from 'discord.js';
-import type { Command } from '../../types/index.js';
-import { geminiResponse } from '../../utils/gemini.js';
+import { geminiResponse } from '../../services/ai/gemini.js';
 
 export const data = new SlashCommandBuilder()
     .setName('ask')
