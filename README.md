@@ -30,9 +30,8 @@ cp .env.example .env
 ```
 
 แก้ไขไฟล์ `.env` และใส่ค่าที่จำเป็น:
-- `TOKEN` - Discord Bot Token (จำเป็น)
+- `DISCORD_TOKEN` - Discord Bot Token (จำเป็น)
 - `GEMINI_API_KEY` - Google Gemini API Key (จำเป็น)
-- `API_KEY`, `AUTH_DOMAIN`, `DATABASE_URL`, `PROJECT_ID`, `STORAGE_BUCKET`, `MESSAGING_SENDER_ID`, `APP_ID`, `MEASUREMENT_ID` - Firebase Config (จำเป็น)
 
 ### 4. สร้างไฟล์ config.json
 ไฟล์ `config.json` มีค่าตั้งค่าอยู่แล้ว สามารถแก้ไขได้ตามต้องการ
@@ -73,8 +72,6 @@ src/
 │   ├── i18n/                   # Internationalization
 │   │   ├── i18n.ts
 │   │   └── locales/
-│   ├── database/               # Firebase Database
-│   │   └── firebase.ts
 │   ├── music/                  # Music Service (DisTube)
 │   │   └── distube.ts
 │   ├── embed/                  # Embed Response System
@@ -130,9 +127,8 @@ npm start
 | Info (Blue) | `0x5865F2` | ข้อมูล |
 | Warning (Yellow) | `0xFEE75C` | เตือน |
 | Error (Red) | `0xED4245` | ผิดพลาด |
-| AI Default (Pink) | `0xFFB6C1` | ตอบ AI (Kuniko theme) |
+| AI Default (Pink) | `0xFFB6C1` | answer/reply |
 | AI Thinking (Purple) | `0x9370DB` | กำลังคิด |
-| AI Error (Red) | `0xED4245` | ผิดพลาด AI |
 
 ## 📄 License
 
@@ -140,6 +136,6 @@ MIT
 
 ## 👨‍💻 Author
 
-Kazemi Miharu Based - Pacharakan Todkaew
+Kazemi Miharu Based - Pacharakan Todkaew \n
 Shioru Based - Chaiwat Suwannarat
 

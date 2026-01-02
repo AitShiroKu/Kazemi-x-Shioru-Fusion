@@ -3,7 +3,7 @@ import {
   EmbedBuilder,
   Colors,
 } from 'discord.js';
-import type { Event } from '../types/index.js';
+import type { Event } from '../handlers/types.js';
 
 export const name = Events.GuildUnavailable;
 export const once = false;

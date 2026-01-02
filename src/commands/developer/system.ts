@@ -16,7 +16,7 @@ import {
 } from 'discord.js';
 import { get } from 'systeminformation';
 import packages from '../../../package.json' with { type: 'json' };
-import type { Command } from '../../types/index.js';
+import type { Command } from '../../handlers/types.js';
 
 export const data = new SlashCommandBuilder()
   .setName('system')

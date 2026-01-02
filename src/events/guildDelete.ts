@@ -1,5 +1,5 @@
 import { Events } from 'discord.js';
-import type { Event } from '../types/index.js';
+import type { Event } from '../handlers/types.js';
 
 export const name = Events.GuildDelete;
 export const once = false;

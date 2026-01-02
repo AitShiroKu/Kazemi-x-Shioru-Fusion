@@ -5,7 +5,7 @@ import {
   ApplicationIntegrationType,
   ChatInputCommandInteraction,
 } from 'discord.js';
-import type { Command } from '../../types/index.js';
+import type { Command } from '../../handlers/types.js';
 
 export const data = new SlashCommandBuilder()
   .setName('afk')

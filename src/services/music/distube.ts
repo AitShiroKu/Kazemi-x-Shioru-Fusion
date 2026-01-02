@@ -10,7 +10,7 @@ import { SpotifyPlugin } from '@distube/spotify';
 import { SoundCloudPlugin } from '@distube/soundcloud';
 import { YtDlpPlugin } from '@distube/yt-dlp';
 import type { Client } from 'discord.js';
-import type { BotConfig } from '../../types/index.js';
+import type { BotConfig } from '../../handlers/types.js';
 
 let player: DisTube | null = null;
 

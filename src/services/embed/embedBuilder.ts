@@ -4,34 +4,34 @@
  */
 
 import { EmbedBuilder, ColorResolvable, EmbedField } from 'discord.js';
-import type { EmbedOptions } from '../../types/index.js';
+import type { EmbedOptions } from '../../handlers/types.js';
 
 /**
  * Embed Color Enum with predefined colors for different response types
  */
-export enum EmbedColor {
-  // Success Colors
-  SUCCESS = 0x57F287,      // Green
-  INFO = 0x5865F2,         // Blue
-  // Warning Colors
-  WARNING = 0xFEE75C,      // Yellow
-  // Error Colors
-  ERROR = 0xED4245,         // Red
-  // Category Colors
-  MUSIC = 0x5865F2,         // Blue
-  FUN = 0xEB459E,           // Pink
-  UTILITY = 0x57F287,      // Green
-  MANAGER = 0xED4245,       // Red
-  INFORMATION = 0x5865F2,   // Blue
-  DEVELOPER = 0x5865F2,     // Blue
-  ME = 0x5865F2,            // Blue
-  MESSAGES = 0x5865F2,       // Blue
-  SETTINGS = 0x5865F2,      // Blue
-  // AI Colors (from Kazemi - Kuniko theme)
-  AI_DEFAULT = 0xFFB6C1,    // Light Pink
-  AI_THINKING = 0x9370DB,   // Purple
-  AI_ERROR = 0xED4245,      // Red
-}
+// export enum EmbedColor {
+//   // Success Colors
+//   SUCCESS = 0x57F287,      // Green
+//   INFO = 0x5865F2,         // Blue
+//   // Warning Colors
+//   WARNING = 0xFEE75C,      // Yellow
+//   // Error Colors
+//   ERROR = 0xED4245,         // Red
+//   // Category Colors
+//   MUSIC = 0x5865F2,         // Blue
+//   FUN = 0xEB459E,           // Pink
+//   UTILITY = 0x57F287,      // Green
+//   MANAGER = 0xED4245,       // Red
+//   INFORMATION = 0x5865F2,   // Blue
+//   DEVELOPER = 0x5865F2,     // Blue
+//   ME = 0x5865F2,            // Blue
+//   MESSAGES = 0x5865F2,       // Blue
+//   SETTINGS = 0x5865F2,      // Blue
+//   // AI Colors (from Kazemi - Kuniko theme)
+//   AI_DEFAULT = 0xFFB6C1,    // Light Pink
+//   AI_THINKING = 0x9370DB,   // Purple
+//   AI_ERROR = 0xED4245,      // Red
+// }
 
 /**
  * Embed Builder Service
@@ -44,7 +44,7 @@ export class EmbedBuilderService {
   static success(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.SUCCESS,
+      // color: EmbedColor.SUCCESS,
     });
   }
 
@@ -54,7 +54,7 @@ export class EmbedBuilderService {
   static error(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.ERROR,
+      // color: EmbedColor.ERROR,
     });
   }
 
@@ -64,7 +64,7 @@ export class EmbedBuilderService {
   static info(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.INFO,
+      // color: EmbedColor.INFO,
     });
   }
 
@@ -74,19 +74,19 @@ export class EmbedBuilderService {
   static warning(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.WARNING,
+      // color: EmbedColor.WARNING,
     });
   }
 
   /**
-   * Create an AI response embed (Pink - Kuniko theme)
+   * Create an AI response embed (Pink - Kazemi theme)
    */
   static aiResponse(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.AI_DEFAULT,
+      // color: EmbedColor.AI_DEFAULT,
       author: options.author || {
-        name: '🌸 Kuniko Zakura',
+        name: '🌸 Kazemi Miharu',
         iconURL: 'https://i.imgur.com/xxx.png', // Replace with actual bot avatar
       },
     });
@@ -98,7 +98,7 @@ export class EmbedBuilderService {
   static aiThinking(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.AI_THINKING,
+      // color: EmbedColor.AI_THINKING,
       description: options.description || '🤔 กำลังคิด...',
     });
   }
@@ -109,7 +109,7 @@ export class EmbedBuilderService {
   static aiError(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.AI_ERROR,
+      // color: EmbedColor.AI_ERROR,
       title: options.title || '❌ เกิดข้อผิดพลาด',
     });
   }
@@ -120,7 +120,7 @@ export class EmbedBuilderService {
   static music(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.MUSIC,
+      // color: EmbedColor.MUSIC,
     });
   }
 
@@ -130,7 +130,7 @@ export class EmbedBuilderService {
   static fun(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.FUN,
+      // color: EmbedColor.FUN,
     });
   }
 
@@ -140,7 +140,7 @@ export class EmbedBuilderService {
   static utility(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.UTILITY,
+      // color: EmbedColor.UTILITY,
     });
   }
 
@@ -150,7 +150,7 @@ export class EmbedBuilderService {
   static manager(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.MANAGER,
+      // color: EmbedColor.MANAGER,
     });
   }
 
@@ -160,7 +160,7 @@ export class EmbedBuilderService {
   static information(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.INFORMATION,
+      // color: EmbedColor.INFORMATION,
     });
   }
 
@@ -170,7 +170,7 @@ export class EmbedBuilderService {
   static developer(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.DEVELOPER,
+      // color: EmbedColor.DEVELOPER,
     });
   }
 
@@ -180,7 +180,7 @@ export class EmbedBuilderService {
   static settings(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.SETTINGS,
+      // color: EmbedColor.SETTINGS,
     });
   }
 
@@ -190,7 +190,7 @@ export class EmbedBuilderService {
   static messages(options: EmbedOptions): EmbedBuilder {
     return this.create({
       ...options,
-      color: EmbedColor.MESSAGES,
+      // color: EmbedColor.MESSAGES,
     });
   }
 

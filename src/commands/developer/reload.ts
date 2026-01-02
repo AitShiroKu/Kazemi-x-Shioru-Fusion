@@ -14,7 +14,7 @@ import {
 } from 'discord.js';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import type { Command, BotClient } from '../../types/index.js';
+import type { Command, BotClient } from '../../handlers/types.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

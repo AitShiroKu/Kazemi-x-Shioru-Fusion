@@ -7,7 +7,7 @@ import { Collection, PermissionsBitField, REST, Routes, RESTPostAPIChatInputAppl
 import { readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import type { BotClient, Command, CommandCategory } from '../types/index.js';
+import type { BotClient, Command, CommandCategory } from './types.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

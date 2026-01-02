@@ -7,7 +7,7 @@ import { Collection, PermissionsBitField } from 'discord.js';
 import { readdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import type { BotClient, Context } from '../types/index.js';
+import type { BotClient, Context } from './types.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

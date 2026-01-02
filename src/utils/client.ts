@@ -17,13 +17,12 @@ import { SpotifyPlugin } from '@distube/spotify';
 import { SoundCloudPlugin } from '@distube/soundcloud';
 import { YtDlpPlugin } from '@distube/yt-dlp';
 
-import { BotClient } from '../types/index.js';
+import { BotClient } from '../handlers/types.js';
 export type { BotClient };
 import { loadCommands, registerCommands } from '../handlers/command.js';
 import { loadEvents } from '../handlers/event.js';
 import { loadContexts } from '../handlers/context.js';
 import { setupPlayerEvents } from '../handlers/player.js';
-import { setupProcessHandlers } from '../handlers/process.js';
 import config from '../services/config/config.js';
 import logger from '../services/logger/logger.js';
 import { initI18n, t } from '../services/i18n/i18n.js';
@@ -181,9 +180,6 @@ export async function loadAllHandlers(client: BotClient): Promise<void> {
 
   // Setup player events
   setupPlayerEvents(client);
-
-  // Setup process handlers
-  setupProcessHandlers(client);
 
   client.logger.info('All handlers loaded successfully');
 }

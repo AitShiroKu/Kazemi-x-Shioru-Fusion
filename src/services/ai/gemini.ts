@@ -5,7 +5,7 @@
 
 import { GoogleGenerativeAI, HarmBlockThreshold, HarmCategory } from '@google/generative-ai';
 import { GEMINI_API_KEY, GEMINI_MODEL, GEMINI_TEMPERATURE, GEMINI_MAX_OUTPUT_TOKENS, DEBUG_MODE } from '../config/config.js';
-import type { MemoryData, UserMemory, MemoryMessage } from '../../types/index.js';
+import type { MemoryData, UserMemory, MemoryMessage } from '../../handlers/types.js';
 
 const SYSTEM_PROMPT = process.env.SYSTEM_PROMPT || `You are Kazemi Miharu, a friendly anime girl who is always responsive and cute with emoji. Please respond with user's latest message language.`;
 

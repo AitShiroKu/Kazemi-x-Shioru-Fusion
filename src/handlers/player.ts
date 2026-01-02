@@ -5,10 +5,9 @@
 
 import { EmbedBuilder, Colors, type VoiceBasedChannel } from 'discord.js';
 import { Events, type Queue, type Song, type DisTube } from 'distube';
-import type { BotClient } from '../types/index.js';
-import { EmbedBuilderService, EmbedColor } from '../services/embed/embedBuilder.js';
+import { EmbedBuilderService } from '../services/embed/embedBuilder.js';
 
-export function setupPlayerEvents(client: BotClient): void {
+export function setupPlayerEvents(client: any): void {
   const webhookLogEmbed = new EmbedBuilder()
     .setTitle('🎹・Player')
     .setTimestamp();
