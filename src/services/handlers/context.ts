@@ -18,7 +18,7 @@ export function loadContexts(client: BotClient): void {
 
   client.logger.info('Verifying and loading all contexts...');
 
-  const contextsPath = join(__dirname, '..', 'contexts');
+  const contextsPath = join(__dirname, '../../contexts');
   const contextFiles = readdirSync(contextsPath).filter((file) =>
     file.endsWith('.js'),
   );

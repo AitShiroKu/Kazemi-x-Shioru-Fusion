@@ -14,7 +14,7 @@ const __dirname = dirname(__filename);
 export function loadEvents(client: BotClient): void {
   client.logger.info('Verifying and loading all events...');
 
-  const eventsPath = join(__dirname, '..', 'events');
+  const eventsPath = join(__dirname, '../../events');
   const eventFiles = readdirSync(eventsPath).filter((file) =>
     file.endsWith('.js'),
   );
