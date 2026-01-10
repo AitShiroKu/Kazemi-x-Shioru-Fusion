@@ -24,26 +24,33 @@ export async function loadCommands(client: BotClient): Promise<void> {
 
   for (const folder of commandFolders) {
     const commandsPath = join(foldersPath, folder);
+    
+    // Skip if directory doesn't exist
+    try {
+      readdirSync(commandsPath);
+    } catch {
+      client.logger.warn(`Command directory not found: ${commandsPath}`);
+      continue;
+    }
+    
     const commandFiles = readdirSync(commandsPath).filter((file) =>
-      file.endsWith('.js'),
+      (file.endsWith('.ts') && !file.endsWith('.d.ts')) || file.endsWith('.js'),
     );
 
     for (const file of commandFiles) {
       const filePath = join(commandsPath, file);
-      // Dynamic import for ES modules
-      const commandModule = await import(pathToFileURL(filePath).href);
-      const command: Command = commandModule.default || commandModule;
+      
+      try {
+        // Dynamic import for ES modules
+        const commandModule = await import(pathToFileURL(filePath).href);
+        const command: Command = commandModule.default || commandModule;
 
-      client.logger.debug(
-        `Checking details of ${file} command at (${filePath})`,
-      );
-
-      if (typeof command.data !== 'object') {
+      if (!command.data || typeof command.data !== 'object') {
         client.logger.warn(
           {
             path: filePath,
             type: 'command',
-            reason: 'You have a missing "data" or "data" is not an object.',
+            reason: 'Missing or invalid "data" property. Command must have a SlashCommandBuilder instance.',
           },
           `Unable to load command ${file}`,
         );
@@ -55,7 +62,19 @@ export async function loadCommands(client: BotClient): Promise<void> {
           {
             path: filePath,
             type: 'command',
-            reason: 'You have a missing "function" or "function" is not a string.',
+            reason: 'You have a missing "execute" function or "execute" is not a function.',
+          },
+          `Unable to load command ${file}`,
+        );
+        continue;
+      }
+
+      if (!command.data.name) {
+        client.logger.warn(
+          {
+            path: filePath,
+            type: 'command',
+            reason: 'Command name is missing. Ensure SlashCommandBuilder.setName() was called.',
           },
           `Unable to load command ${file}`,
         );
@@ -63,6 +82,10 @@ export async function loadCommands(client: BotClient): Promise<void> {
       }
 
       const commandName = command.data.name;
+
+      client.logger.debug(
+        `Loading command: ${commandName} from ${file}`,
+      );
 
       if (client.commands.get(commandName)) {
         client.logger.warn(
@@ -103,6 +126,16 @@ export async function loadCommands(client: BotClient): Promise<void> {
       });
 
       client.logger.info(`Loaded command: ${commandName} (${folder})`);
+      } catch (error) {
+        client.logger.error(
+          {
+            path: filePath,
+            type: 'command',
+            error: error instanceof Error ? error.message : String(error),
+          },
+          `Failed to import command ${file}`,
+        );
+      }
     }
   }
 }
@@ -116,6 +149,11 @@ export async function registerCommands(client: BotClient): Promise<void> {
   client.commands.forEach((command) => {
     commands.push(command.data.toJSON());
   });
+
+  if (commands.length === 0) {
+    client.logger.warn('No commands to register. Command collection is empty.');
+    return;
+  }
 
   const rest = new REST().setToken(client.configs.token);
 

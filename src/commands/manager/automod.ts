@@ -6,6 +6,7 @@ import {
   InteractionContextType,
   ApplicationIntegrationType,
   ChatInputCommandInteraction,
+  MessageFlags,
 } from 'discord.js';
 import type { Command } from '../../services/handlers/types.js';
 
@@ -94,32 +95,149 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     return await interaction.reply(i18n('commands.automod.guild_only'));
   }
 
-  // Placeholder for auto-moderation features
-  // This would require Discord's AutoModeration API or a custom implementation
+  // Implementation using Discord's AutoModeration API
   switch (subcommand) {
-    case 'flagged_words':
-      await interaction.reply({
-        content: i18n('commands.automod.not_implemented'),
-        ephemeral: true,
-      });
-      break;
-    case 'spam_messages':
-      await interaction.reply({
-        content: i18n('commands.automod.not_implemented'),
-        ephemeral: true,
-      });
-      break;
-    case 'mention_spam':
-      await interaction.reply({
-        content: i18n('commands.automod.not_implemented'),
-        ephemeral: true,
-      });
-      break;
-    case 'keyword':
-      await interaction.reply({
-        content: i18n('commands.automod.not_implemented'),
-        ephemeral: true,
-      });
-      break;
+    case 'flagged_words': {
+      try {
+        const teamOwner = interaction.client.user.id;
+        
+        const flaggedWordsRule = await interaction.guild.autoModerationRules.create({
+          name: i18n('commands.automod.flagged_words_name'),
+          enabled: true,
+          eventType: 1,
+          triggerType: 4,
+          triggerMetadata: { presets: [1, 2, 3] },
+          actions: [
+            {
+              type: 1,
+              metadata: {
+                channel: interaction.channel?.id,
+                durationSeconds: 10,
+                customMessage: i18n('commands.automod.prevent_message'),
+              },
+            },
+          ],
+        });
+
+        const flaggedWordsEmbed = new EmbedBuilder()
+          .setColor('Blue')
+          .setDescription(i18n('commands.automod.flagged_words_success'));
+
+        return await interaction.reply({ embeds: [flaggedWordsEmbed] });
+      } catch (error) {
+        console.error('Error creating flagged words rule:', error);
+        return await interaction.reply({
+          content: i18n('commands.automod.error_creating_rule'),
+          flags: MessageFlags.Ephemeral,
+        });
+      }
+    }
+    case 'spam_messages': {
+      try {
+        const teamOwner = interaction.client.user.id;
+        
+        const spamMessagesRule = await interaction.guild.autoModerationRules.create({
+          name: i18n('commands.automod.spam_messages_name'),
+          enabled: true,
+          eventType: 1,
+          triggerType: 3,
+          triggerMetadata: {},
+          actions: [
+            {
+              type: 1,
+              metadata: {
+                channel: interaction.channel?.id,
+                durationSeconds: 10,
+                customMessage: i18n('commands.automod.prevent_message'),
+              },
+            },
+          ],
+        });
+
+        const spamMessagesEmbed = new EmbedBuilder()
+          .setColor('Blue')
+          .setDescription(i18n('commands.automod.spam_messages_success'));
+
+        return await interaction.reply({ embeds: [spamMessagesEmbed] });
+      } catch (error) {
+        console.error('Error creating spam messages rule:', error);
+        return await interaction.reply({
+          content: i18n('commands.automod.error_creating_rule'),
+          flags: MessageFlags.Ephemeral,
+        });
+      }
+    }
+    case 'mention_spam': {
+      try {
+        const teamOwner = interaction.client.user.id;
+        
+        const mentionSpamRule = await interaction.guild.autoModerationRules.create({
+          name: i18n('commands.automod.mention_spam_name'),
+          enabled: true,
+          eventType: 1,
+          triggerType: 5,
+          triggerMetadata: { mentionTotalLimit: inputCount },
+          actions: [
+            {
+              type: 1,
+              metadata: {
+                channel: interaction.channel?.id,
+                durationSeconds: 10,
+                customMessage: i18n('commands.automod.prevent_message'),
+              },
+            },
+          ],
+        });
+
+        const mentionSpamEmbed = new EmbedBuilder()
+          .setColor('Blue')
+          .setDescription(i18n('commands.automod.mention_spam_success'));
+
+        return await interaction.reply({ embeds: [mentionSpamEmbed] });
+      } catch (error) {
+        console.error('Error creating mention spam rule:', error);
+        return await interaction.reply({
+          content: i18n('commands.automod.error_creating_rule'),
+          flags: MessageFlags.Ephemeral,
+        });
+      }
+    }
+    case 'keyword': {
+      try {
+        const teamOwner = interaction.client.user.id;
+        
+        const keywordRule = await interaction.guild.autoModerationRules.create({
+          name: i18n('commands.automod.keyword_name').replace('%s', inputWord),
+          enabled: true,
+          eventType: 1,
+          triggerType: 1,
+          triggerMetadata: {
+            keywordFilter: [inputWord],
+          },
+          actions: [
+            {
+              type: 1,
+              metadata: {
+                channel: interaction.channel?.id,
+                durationSeconds: 10,
+                customMessage: i18n('commands.automod.prevent_message'),
+              },
+            },
+          ],
+        });
+
+        const keywordEmbed = new EmbedBuilder()
+          .setColor('Blue')
+          .setDescription(i18n('commands.automod.keyword_success').replace('%s', inputWord));
+
+        return await interaction.reply({ embeds: [keywordEmbed] });
+      } catch (error) {
+        console.error('Error creating keyword rule:', error);
+        return await interaction.reply({
+          content: i18n('commands.automod.error_creating_rule'),
+          flags: MessageFlags.Ephemeral,
+        });
+      }
+    }
   }
 }

@@ -31,7 +31,18 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     const client = interaction.client as any;
     const question = interaction.options.getString('question', true);
 
-    await interaction.deferReply();
+    try {
+        await interaction.deferReply();
+    } catch (error: any) {
+        console.error('Error deferring reply:', error);
+        if (error.code === 10062) {
+            return await interaction.reply({
+                content: '❌ Interaction หมดอายุ กรุณาลองใหม่',
+                ephemeral: true,
+            });
+        }
+        return;
+    }
 
     const userId = interaction.user.id;
     const username = interaction.user.globalName || interaction.user.username;
@@ -71,7 +82,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 .setDescription(client.formatBotReply?.(segment.text) || segment.text)
                 .setTimestamp()
                 .setFooter({
-                    text: `Asked by ${username} | Gemini AI`,
+                    text: `Asked by ${username} | Kazemi Miharu AI Beta Build v1.0.0`,
                     iconURL: interaction.user.displayAvatarURL()
                 });
 
@@ -93,9 +104,29 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             }
 
             if (i === 0) {
-                await interaction.editReply(replyOptions);
+                try {
+                    await interaction.editReply(replyOptions);
+                } catch (error: any) {
+                    if (error.code === 10062) {
+                        return await interaction.followUp({
+                            content: '❌ Interaction หมดอายุ คำตอบจะไม่สมบูรณ์',
+                            ephemeral: true,
+                        });
+                    }
+                    throw error;
+                }
             } else {
-                await interaction.followUp(replyOptions);
+                try {
+                    await interaction.followUp(replyOptions);
+                } catch (error: any) {
+                    if (error.code === 10062) {
+                        return await interaction.followUp({
+                            content: '❌ Interaction หมดอายุ คำตอบจะไม่สมบูรณ์',
+                            ephemeral: true,
+                        });
+                    }
+                    throw error;
+                }
             }
         }
     } catch (error) {
@@ -105,8 +136,18 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             .setColor(0xFF0000)
             .setDescription('❌ ขออภัยค่ะ เกิดข้อผิดพลาดในการประมวลผล');
 
-        await interaction.editReply({
-            embeds: [errorEmbed],
-        });
+        try {
+            await interaction.editReply({
+                embeds: [errorEmbed],
+            });
+        } catch (replyError: any) {
+            if (replyError.code === 10062) {
+                return await interaction.followUp({
+                    content: '❌ Interaction หมดอายุ ไม่สามารถแสดงข้อผิดพลาดได้',
+                    ephemeral: true,
+                });
+            }
+            throw replyError;
+        }
     }
 }

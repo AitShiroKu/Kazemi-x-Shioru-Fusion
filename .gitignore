@@ -21,3 +21,5 @@ database.rules.json
 
 # Data
 data/
+
+/src/generated/prisma

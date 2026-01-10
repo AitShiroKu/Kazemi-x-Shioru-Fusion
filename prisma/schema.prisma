@@ -1,0 +1,110 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Guild {
+  id        String   @id @default(cuid())
+  guildId   String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // AFK System
+  afks       Afk[]
+
+  // DJ System
+  djs        Djs?
+
+  // Language Settings
+  language   String?
+
+  @@map("guilds")
+}
+
+model Afk {
+  id         String   @id @default(cuid())
+  userId     String
+  guildId    String
+  message    String?
+  nickname   String?
+  timestamp  DateTime @default(now())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, guildId])
+  @@map("afks")
+}
+
+model Djs {
+  id         String   @id @default(cuid())
+  guildId    String   @unique
+  enable     Boolean  @default(false)
+  only       Boolean  @default(false)
+  toggledAt  DateTime?
+  editedAt    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  // DJ Roles and Users will be stored as JSON strings
+  djRoles   DjRole[]
+  djUsers   DjUser[]
+
+  @@map("djs")
+}
+
+model DjRole {
+  id       String   @id @default(cuid())
+  djsId   String
+  roleId   String
+  createdAt DateTime @default(now())
+
+  djs Djs @relation(fields: [djsId], references: [id], onDelete: Cascade)
+
+  @@unique([djsId, roleId])
+  @@map("dj_roles")
+}
+
+model DjUser {
+  id       String   @id @default(cuid())
+  djsId   String
+  userId   String
+  createdAt DateTime @default(now())
+
+  djs Djs @relation(fields: [djsId], references: [id], onDelete: Cascade)
+
+  @@unique([djsId, userId])
+  @@map("dj_users")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Leveling System
+  leveling  Leveling?
+
+  @@map("users")
+}
+
+model Leveling {
+  id       String @id @default(cuid())
+  userId   String @unique
+  exp      Int    @default(0)
+  level    Int    @default(0)
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("leveling")
+}
