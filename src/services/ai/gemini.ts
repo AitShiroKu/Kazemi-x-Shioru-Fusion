@@ -91,15 +91,20 @@ export async function geminiResponse(
     try {
       console.log(`Attempt ${retryCount + 1} of ${maxRetries}`);
       let context: string;
+      
+      // Always include system prompt in context
+      const systemPrompt = SYSTEM_PROMPT.replace('${username}', username);
+      
       if (!conversationHistory || conversationHistory.length <= 2) {
-        context = SYSTEM_PROMPT.replace('${username}', username) + `\n\n${prompt}`;
+        context = systemPrompt + `\n\n${prompt}`;
       } else {
-        context =
-          conversationHistory
-            .slice(-3)
-            .filter((msg) => msg.role !== 'system')
-            .map((msg) => msg.content)
-            .join('\n\n') + `\n\n${prompt}`;
+        // Include system prompt with recent conversation history
+        const recentHistory = conversationHistory
+          .slice(-3)
+          .filter((msg) => msg.role !== 'system')
+          .map((msg) => `${msg.role === 'user' ? 'User' : 'Assistant'}: ${msg.content}`)
+          .join('\n\n');
+        context = systemPrompt + `\n\n${recentHistory}\n\nUser: ${prompt}`;
       }
       if (DEBUG_MODE === true) {
         console.log('[DEBUG] Generated context:', context);

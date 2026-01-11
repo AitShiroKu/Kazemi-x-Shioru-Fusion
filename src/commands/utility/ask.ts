@@ -87,7 +87,34 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                 });
 
             if (i === 0) {
-                embed.setTitle(`💬 Question: ${question.length > 250 ? question.substring(0, 247) + '...' : question}`);
+                // Debug logging to diagnose the issue
+                const prefix = '💬 Question: ';
+                const suffix = '...';
+                const maxTitleLength = 256;
+                const maxQuestionLength = maxTitleLength - prefix.length - suffix.length;
+                
+                console.log('=== ASK COMMAND DEBUG ===');
+                console.log('Original question length:', question.length);
+                console.log('Prefix length:', prefix.length);
+                console.log('Suffix length:', suffix.length);
+                console.log('Max question length allowed:', maxQuestionLength);
+                console.log('Current condition (question > 250):', question.length > 250);
+                
+                let finalQuestion;
+                if (question.length > maxQuestionLength) {
+                    finalQuestion = question.substring(0, maxQuestionLength) + suffix;
+                    console.log('Question truncated, new length:', finalQuestion.length);
+                } else {
+                    finalQuestion = question;
+                    console.log('Question not truncated, length:', finalQuestion.length);
+                }
+                
+                const finalTitle = prefix + finalQuestion;
+                console.log('Final title length:', finalTitle.length);
+                console.log('Final title:', finalTitle);
+                console.log('========================');
+                
+                embed.setTitle(finalTitle);
             }
 
             const replyOptions: any = {
