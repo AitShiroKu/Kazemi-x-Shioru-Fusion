@@ -1,5 +1,7 @@
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
-export type MemoryRole = 'system' | 'user' | 'model';
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "fs";
+import { debug } from "../logger/logger.js";
+import logger from "../logger/logger.js";
+export type MemoryRole = "system" | "user" | "model";
 
 export interface MemoryMessage {
   role: MemoryRole;
@@ -27,7 +29,16 @@ const cleanupOldHistory = (memory: MemoryData): MemoryData => {
     if (now - userMemory.lastActivity > THREE_DAYS) {
       // ลบประวัติเก่าที่เกิน 3 วัน
       delete memory[userId];
-      console.log(`Cleaned up old history for user ${userId}`);
+      debug(
+        "Cleaned up old history for user",
+        {
+          userId,
+          daysInactive: Math.round(
+            (now - userMemory.lastActivity) / (24 * 60 * 60 * 1000),
+          ),
+        },
+        "memory",
+      );
     }
   }
   return memory;
@@ -35,32 +46,38 @@ const cleanupOldHistory = (memory: MemoryData): MemoryData => {
 
 export const loadMemory = (): MemoryData => {
   try {
-    if (!existsSync('data')) {
-      console.log('Creating data directory');
-      mkdirSync('data', { recursive: true });
+    if (!existsSync("data")) {
+      debug("Creating data directory", {}, "memory");
+      mkdirSync("data", { recursive: true });
     }
-    if (!existsSync('data/memory.json')) {
-      console.log('Creating new memory file');
-      writeFileSync('data/memory.json', JSON.stringify({}, null, 2), 'utf-8');
+    if (!existsSync("data/memory.json")) {
+      debug("Creating new memory file", {}, "memory");
+      writeFileSync("data/memory.json", JSON.stringify({}, null, 2), "utf-8");
       return {};
     }
-    const memory = JSON.parse(readFileSync('data/memory.json', 'utf-8')) as MemoryData;
+    const memory = JSON.parse(
+      readFileSync("data/memory.json", "utf-8"),
+    ) as MemoryData;
     return cleanupOldHistory(memory);
   } catch (err) {
-    console.error('Error loading memory:', err);
+    logger.error({ error: err }, "Error loading memory");
     return {};
   }
 };
 
 export const saveMemory = (memory: MemoryData): void => {
   try {
-    if (!existsSync('data')) {
-      console.log('Creating data directory');
-      mkdirSync('data', { recursive: true });
+    if (!existsSync("data")) {
+      debug("Creating data directory", {}, "memory");
+      mkdirSync("data", { recursive: true });
     }
-    writeFileSync('data/memory.json', JSON.stringify(memory, null, 2), 'utf-8');
-    console.log('Memory saved successfully');
+    writeFileSync("data/memory.json", JSON.stringify(memory, null, 2), "utf-8");
+    debug(
+      "Memory saved successfully",
+      { memorySize: Object.keys(memory).length },
+      "memory",
+    );
   } catch (err) {
-    console.error('Error saving memory:', err);
+    logger.error({ error: err }, "Error saving memory");
   }
 };

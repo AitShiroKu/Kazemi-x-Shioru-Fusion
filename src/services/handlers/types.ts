@@ -3,8 +3,16 @@
  * Kazemi x Shioru Integration
  */
 
-import { Collection, Client, SlashCommandBuilder, ContextMenuCommandBuilder, ChatInputCommandInteraction, ContextMenuCommandInteraction, PermissionResolvable } from 'discord.js';
-import type pino from 'pino';
+import {
+  Collection,
+  Client,
+  SlashCommandBuilder,
+  ContextMenuCommandBuilder,
+  ChatInputCommandInteraction,
+  ContextMenuCommandInteraction,
+  PermissionResolvable,
+} from "discord.js";
+import type pino from "pino";
 
 // ============================================================================
 // Bot Client Types
@@ -23,10 +31,16 @@ export interface BotClient extends Client {
   userConversations: MemoryData;
   saveMemory: (memory: MemoryData) => void;
   formatBotReply?: (text: string) => string;
-  splitMessageWithCodeBlocks?: (text: string) => Array<{ text: string; attachment?: { content: string; name: string } }>;
+  splitMessageWithCodeBlocks?: (
+    text: string,
+  ) => Array<{ text: string; attachment?: { content: string; name: string } }>;
   // Database functions (stubs for removed Firebase integration)
   initializeData?: (guild: any) => Promise<void>;
-  submitNotification?: (guild: any, eventName: string, embed: any) => Promise<void>;
+  submitNotification?: (
+    guild: any,
+    eventName: string,
+    embed: any,
+  ) => Promise<void>;
 }
 
 export interface TempData {
@@ -41,7 +55,7 @@ export interface TempData {
 export interface CommandInfo {
   name: string;
   description: {
-    'en-US': string;
+    "en-US": string;
     [key: string]: string;
   };
   cooldown: number;
@@ -78,15 +92,15 @@ export interface Context {
 }
 
 export enum CommandCategory {
-  DEVELOPER = 'DEVELOPER',
-  FUN = 'FUN',
-  INFORMATION = 'INFORMATION',
-  MANAGER = 'MANAGER',
-  ME = 'ME',
-  MESSAGES = 'MESSAGES',
-  MUSIC = 'MUSIC',
-  SETTINGS = 'SETTINGS',
-  UTILITY = 'UTILITY',
+  DEVELOPER = "DEVELOPER",
+  FUN = "FUN",
+  INFORMATION = "INFORMATION",
+  MANAGER = "MANAGER",
+  ME = "ME",
+  MESSAGES = "MESSAGES",
+  MUSIC = "MUSIC",
+  SETTINGS = "SETTINGS",
+  UTILITY = "UTILITY",
 }
 
 // ============================================================================
@@ -116,7 +130,7 @@ export interface UserMemory {
 }
 
 export interface MemoryMessage {
-  role: 'system' | 'user' | 'model';
+  role: "system" | "user" | "model";
   content: string;
   timestamp: number;
 }
@@ -139,26 +153,26 @@ export interface ThinkingStep {
 
 export enum EmbedColor {
   // Success Colors
-  SUCCESS = 0x57F287,      // Green
-  INFO = 0x5865F2,         // Blue
+  SUCCESS = 0x57f287, // Green
+  INFO = 0x5865f2, // Blue
   // Warning Colors
-  WARNING = 0xFEE75C,      // Yellow
+  WARNING = 0xfee75c, // Yellow
   // Error Colors
-  ERROR = 0xED4245,         // Red
+  ERROR = 0xed4245, // Red
   // Category Colors
-  MUSIC = 0x5865F2,         // Blue
-  FUN = 0xEB459E,           // Pink
-  UTILITY = 0x57F287,      // Green
-  MANAGER = 0xED4245,       // Red
-  INFORMATION = 0x5865F2,   // Blue
-  DEVELOPER = 0x5865F2,     // Blue
-  ME = 0x5865F2,            // Blue
-  MESSAGES = 0x5865F2,       // Blue
-  SETTINGS = 0x5865F2,      // Blue
+  MUSIC = 0x5865f2, // Blue
+  FUN = 0xeb459e, // Pink
+  UTILITY = 0x57f287, // Green
+  MANAGER = 0xed4245, // Red
+  INFORMATION = 0x5865f2, // Blue
+  DEVELOPER = 0x5865f2, // Blue
+  ME = 0x5865f2, // Blue
+  MESSAGES = 0x5865f2, // Blue
+  SETTINGS = 0x5865f2, // Blue
   // AI Colors (from Kazemi - Kuniko theme)
-  AI_DEFAULT = 0xFFB6C1,    // Light Pink
-  AI_THINKING = 0x9370DB,   // Purple
-  AI_ERROR = 0xED4245,      // Red
+  AI_DEFAULT = 0xffb6c1, // Light Pink
+  AI_THINKING = 0x9370db, // Purple
+  AI_ERROR = 0xed4245, // Red
 }
 
 export interface EmbedOptions {
@@ -192,6 +206,7 @@ export interface BotConfig {
   i18n: I18nConfig;
   filters: string[];
   logger: LoggerConfig;
+  debug: DebugConfig;
   monitoring: MonitoringConfig;
   openai: OpenAIConfig;
   openWeatherToken?: string;
@@ -228,6 +243,14 @@ export interface LoggerConfig {
     enable: boolean;
     webhookURL?: string;
   };
+}
+
+export interface DebugConfig {
+  enable: boolean;
+  fileLogging: boolean;
+  consoleLogging: boolean;
+  webhookURL: string;
+  logLevel: string;
 }
 
 export interface MonitoringConfig {
