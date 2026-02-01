@@ -1,141 +1,83 @@
-# Kazemi x Shioru Fusion - Discord Bot
+# 🌌 Kazemi x Shioru Fusion
+> The ultimate hybrid Discord bot combining advanced AI capabilities with a robust music and utility core.
 
-โปรเจกต์ Discord Bot ที่รวมระบบจาก 2 โปรเจกต์:
-- **Kazemi** - บอท AI ที่ใช้ Google Gemini AI พร้อมระบบจำความ (Memory System)
-- **Shioru** - บอทที่มีฟีเจอร์ครบครัน (Music, Commands, Events, i18n, Database)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/Node.js-%3E%3D18.0.0-green.svg)](https://nodejs.org/)
 
-## 📋 สิ่งที่ต้องการติดตั้งก่อน
+## ✨ Overview
+**Kazemi x Shioru Fusion** is a powerful Discord bot built by merging two distinct systems:
+*   **Kazemi Core:** Driven by Google Gemini AI, featuring a persistent memory system for contextual conversations.
+*   **Shioru Core:** A high-performance framework handling Music, Slash Commands, Localization (i18n), and Database integration.
 
-### 1. ติดตั้ง Node.js
+---
+
+## 🚀 Key Features
+
+### 🧠 Kazemi AI (The Brain)
+*   **Google Gemini Integration:** Natural language processing for intelligent responses.
+*   **Memory System:** Remembers previous interactions to maintain context.
+*   **Dynamic Embeds:** AI responses are beautifully formatted with specific color coding.
+
+### 🎵 Shioru Core (The Muscle)
+*   **Music System:** High-quality audio playback powered by DisTube.
+*   **Internationalization:** Supports over 40+ languages.
+*   **Scalable Architecture:** Slash & Context commands, Event handlers, and Pino logging.
+*   **Database:** Integrated with Firebase for data persistence.
+
+---
+
+## 🛠️ Installation & Setup
+
+### Prerequisites
+- **Node.js:** v18.0.0 or higher
+- **Package Manager:** npm or yarn
+
+### 1. Clone & Install
 ```bash
-# ตรวจสอบเวอร์ชั่น
-node --version
-# ต้องเป็น Node.js >= 18.0.0
-```
-
-### 2. ติดตั้ง Dependencies
-```bash
+git clone https://github.com/AitShiroku/Kazemi-x-Shioru-Fusion.git
+cd Kazemi-x-Shioru-Fusion
 npm install
 ```
 
-หรือถ้าใช้ yarn:
+### 2. Configuration
+Copy the environment template and fill in your keys:
 ```bash
-yarn install
-```
-
-### 3. สร้างไฟล์ Environment
-```bash
-# คัดลอกจาก .env.example
 cp .env.example .env
 ```
+Edit `.env` and provide:
+*   `DISCORD_TOKEN`: Your bot token from Discord Developer Portal.
+*   `GEMINI_API_KEY`: Your Google Gemini API Key.
 
-แก้ไขไฟล์ `.env` และใส่ค่าที่จำเป็น:
-- `DISCORD_TOKEN` - Discord Bot Token (จำเป็น)
-- `GEMINI_API_KEY` - Google Gemini API Key (จำเป็น)
+### 3. Localization & Customization
+Modify `config.json` to adjust the bot's behavior and default settings.
 
-### 4. สร้างไฟล์ config.json
-ไฟล์ `config.json` มีค่าตั้งค่าอยู่แล้ว สามารถแก้ไขได้ตามต้องการ
+---
 
-## 🏗️ โครงสร้างโปรเจกต์
+## 💻 Running the Bot
+| Mode | Command |
+| :--- | :--- |
+| **Development** | `npm run dev` |
+| **Build** | `npm run build` |
+| **Production** | `npm start` |
 
-```
-src/
-├── index.ts                    # Entry point
-├── config.ts                   # Configuration
-├── types/                      # TypeScript Interfaces & Types
-│   └── index.ts
-├── client/                     # Discord Client Setup
-│   └── client.ts
-├── handlers/                   # System Handlers
-│   ├── command.ts              # Command loader
-│   ├── context.ts              # Context loader
-│   ├── event.ts                # Event loader
-│   ├── player.ts               # Music player handler
-│   └── process.ts              # Process handlers
-├── commands/                   # Slash Commands
-│   ├── developer/              # Developer commands
-│   ├── fun/                    # Fun commands
-│   ├── information/            # Information commands
-│   ├── manager/                # Server management
-│   ├── me/                     # Bot info commands
-│   ├── messages/               # Message commands
-│   ├── music/                  # Music commands
-│   ├── settings/               # Server settings
-│   └── utility/                # Utility commands
-│       └── ask.ts              # AI Chat command (from Kazemi)
-├── contexts/                   # Context Commands
-├── events/                     # Discord Events
-├── services/                   # Core Services
-│   ├── ai/                     # AI Service (Gemini)
-│   │   ├── gemini.ts
-│   │   └── memory.ts
-│   ├── i18n/                   # Internationalization
-│   │   ├── i18n.ts
-│   │   └── locales/
-│   ├── music/                  # Music Service (DisTube)
-│   │   └── distube.ts
-│   ├── embed/                  # Embed Response System
-│   │   └── embedBuilder.ts
-│   ├── logger/                 # Logger Service
-│   │   └── logger.ts
-│   └── config/                 # Config Service
-│       └── config.ts
-└── data/                       # Data Files
-    ├── memory.json
-    └── config.json
-```
+---
 
-## 🚀 การใช้งาน
+## 🎨 Embed Color System
+We use a specific color palette for different types of bot interactions:
+| Status | Hex Code | Purpose |
+| :--- | :--- | :--- |
+| **Success** | `0x57F287` | Successful actions |
+| **Info** | `0x5865F2` | General information |
+| **Warning** | `0xFEE75C` | System warnings |
+| **Error** | `0xED4245` | Error messages |
+| **AI Default** | `0xFFB6C1` | AI replies |
+| **AI Thinking** | `0x9370DB` | AI processing state |
 
-### Development Mode
-```bash
-npm run dev
-```
+---
 
-### Build
-```bash
-npm run build
-```
+## 📝 License
+This project is licensed under the **MIT License**.
 
-### Production
-```bash
-npm start
-```
-
-## 📝 ฟีเจอร์หลัก
-
-### ฟีเจอร์ AI (Kazemi)
-- ✅ Google Gemini AI Integration
-- ✅ Memory System (จำความแชท)
-- ✅ การตอบกลับด้วย Embed พร้อม Color Coding
-- ✅ ระบบป้องกันเนื้อหา
-
-### ฟีเจอร์จาก Shioru
-- ✅ Slash Commands
-- ✅ Context Commands
-- ✅ Event Handlers
-- ✅ i18n (รองรับ 40+ ภาษา)
-- ✅ Music System (DisTube)
-- ✅ Firebase Database
-- ✅ Logger System (Pino)
-
-## 🎨 Embed Color Coding
-
-| สี | Hex Code | การใช้งาน |
-|-----|----------|-----------|
-| Success (Green) | `0x57F287` | สำเร็จ |
-| Info (Blue) | `0x5865F2` | ข้อมูล |
-| Warning (Yellow) | `0xFEE75C` | เตือน |
-| Error (Red) | `0xED4245` | ผิดพลาด |
-| AI Default (Pink) | `0xFFB6C1` | answer/reply |
-| AI Thinking (Purple) | `0x9370DB` | กำลังคิด |
-
-## 📄 License
-
-MIT
-
-## 👨‍💻 Author
-
-Kazemi Miharu Based - Pacharakan Todkaew \n
-Shioru Based - Chaiwat Suwannarat
-
+## 👥 Authors
+*   **Kazemi Core:** Pacharakan Todkaew
+*   **Shioru Core:** Chaiwat Suwannarat
